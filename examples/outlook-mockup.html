@@ -80,6 +80,19 @@
   .sender-row-flex{display:flex;width:100%;}
 
   .msg-body{padding:20px 24px 30px;}
+
+  @media (max-width: 950px) {
+    .outlook-window {margin: 0; border: none; border-radius: 0; max-width: 100%;}
+    .body-grid {grid-template-columns: 160px 200px 1fr;}
+  }
+  @media (max-width: 768px) {
+    .ribbon {display: none;}
+    .body-grid {grid-template-columns: 1fr; height: auto;}
+    .folder-pane, .msg-list {display: none;}
+    .outlook-window {box-shadow: none;}
+    .msg-header {padding: 16px;}
+    .msg-body {padding: 16px;}
+  }
 </style>
 </head>
 <body>
@@ -113,7 +126,6 @@
 
   <div class="body-grid">
 
-    <!-- Folder pane -->
     <div class="folder-pane">
       <div class="acct">reports@northfieldtrade.example</div>
       <div class="folder-item active">Inbox <span class="count">4</span></div>
@@ -124,7 +136,6 @@
       <div class="folder-item">Reporting Automation <span class="count">12</span></div>
     </div>
 
-    <!-- Message list -->
     <div class="msg-list">
       <div class="list-header"><span>Inbox</span><span>By Date ▾</span></div>
 
@@ -153,7 +164,6 @@
       </div>
     </div>
 
-    <!-- Reading pane -->
     <div class="reading-pane">
       <div class="msg-header">
         <h1>Northfield Trade Supplies — Full Month Sales Performance</h1>
@@ -170,7 +180,6 @@
       </div>
 
       <div class="msg-body">
-        <!-- ===== REPORT CONTENT START ===== -->
         <div style="color:#333333;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.5;">
 
         <div style="color:#4A5568;font-size:14px;margin-bottom:20px;">
@@ -309,8 +318,7 @@
         <div style="color:#94A3B8;font-size:10.5px;margin-top:14px;">This is a demonstration report shown inside a mockup of the Outlook interface. All customer names, account codes, sender/recipient addresses, and website addresses are fictional and use IANA-reserved placeholder domains (.example / .test).</div>
 
         </div>
-        <!-- ===== REPORT CONTENT END ===== -->
-      </div>
+        </div>
     </div>
 
   </div>
