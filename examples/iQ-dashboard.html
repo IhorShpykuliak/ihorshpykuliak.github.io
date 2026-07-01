@@ -1,66 +1,77 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: "Segoe UI", sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 6px; font-size: 11px; }
-        .dashboard-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-        .branch-header { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #3b82f6; }
+        body { font-family: "Segoe UI", sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 12px; font-size: 11px; }
+        .dashboard-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 1200px; margin: 0 auto; }
+        
+        /* Header Block */
+        .branch-header { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #3b82f6; }
         .branch-title { font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; }
         .branch-timestamp { font-size: 9px; color: #64748b; }
-        .calendar-row { display: flex; gap: 8px; width: 100%; }
-        .donut-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; flex: 1; padding: 6px; display: flex; flex-direction: column; align-items: center; position: relative; height: 95px; }
-        .donut-title { font-size: 9px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        
+        /* Calendar and KPI Rows - Flex Wrapping Enabled */
+        .calendar-row { display: flex; flex-wrap: wrap; gap: 8px; width: 100%; }
+        .donut-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; flex: 1; min-width: 140px; padding: 8px; display: flex; flex-direction: column; align-items: center; position: relative; height: 100px; box-sizing: border-box; }
+        .donut-title { font-size: 9px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 4px; text-align: center; }
         .donut-wrapper { position: relative; height: 68px; width: 100%; max-width: 68px; }
         .donut-center-value { position: absolute; top: 58%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 700; color: #0f172a; text-align: center; white-space: nowrap; }
         .donut-sub-label { font-size: 7px; color: #94a3b8; font-weight: 600; }
-        .kpi-row { display: flex; gap: 6px; width: 100%; }
-        .kpi-card { flex: 1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 8px; display: flex; flex-direction: column; border-left: 3px solid #cbd5e1; }
+        
+        .kpi-row { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+        .kpi-card { flex: 1; min-width: 120px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 5px; padding: 8px 10px; display: flex; flex-direction: column; border-left: 3px solid #cbd5e1; box-sizing: border-box; }
         .kpi-card.alert-border { border-left-color: #ef4444; }
         .kpi-card.success-border { border-left-color: #10b981; }
         .kpi-card.neutral-border { border-left-color: #3b82f6; }
         .kpi-label { font-size: 9px; font-weight: 600; color: #64748b; text-transform: uppercase; }
         .kpi-value { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+        
+        /* Interactive Widgets */
         .widget-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; width: 100%; }
         .widget-header { background: #ffffff; padding: 8px 12px; border-bottom: 1px solid #edf2f7; font-weight: 600; color: #475569; font-size: 11px; text-transform: uppercase; }
-        .chart-canvas-wrapper { padding: 8px; position: relative; height: 190px; width: 100%; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 10.5px; }
-        th { background: #f8fafc; color: #64748b; font-weight: 600; padding: 6px 8px; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 8.5px; }
-        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; }
-        tr:hover td { background: #f8fafc; }
-.tab-btn { 
-            background: none; 
-            border: 1px solid #e2e8f0; 
-            border-radius: 4px; 
-            padding: 6px 12px; 
-            font-size: 10px; 
-            cursor: pointer; 
-            color: #64748b; 
-            font-weight: 500;
-            transition: all 0.2s;
-        }
+        .chart-canvas-wrapper { padding: 8px; position: relative; height: 190px; width: 100%; box-sizing: border-box; }
+        
+        /* Table Controls and Scroll Wrapper */
+        .table-overflow-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 10.5px; min-width: 600px; }
+        th { background: #f8fafc; color: #64748b; font-weight: 600; padding: 8px; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 8.5px; }
+        td { padding: 8px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        tbody tr { cursor: pointer; }
+        tbody tr:hover td { background: #f8fafc; }
+        
+        .tab-btn { background: none; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 12px; font-size: 10px; cursor: pointer; color: #64748b; font-weight: 500; transition: all 0.2s; }
         .tab-btn:hover { background: #f1f5f9; }
-        .tab-btn.active { 
-            background: #3b82f6; 
-            color: #fff; 
-            border-color: #3b82f6; 
-        }
+        .tab-btn.active { background: #3b82f6; color: #fff; border-color: #3b82f6; }
         .total-row { background: #f1f5f9 !important; font-weight: 700; }
         .pos-metric { color: #16a34a !important; font-weight: 600; }
         .neg-metric { color: #dc2626 !important; font-weight: 600; }
+        
+        /* Responsive Modal Viewports */
         .modal-overlay { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); }
-        .modal-box { background: #ffffff; margin: 4% auto; padding: 16px; border-radius: 8px; width: 85%; max-width: 900px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.2s ease-out; }
+        .modal-box { background: #ffffff; margin: 20px auto; padding: 16px; border-radius: 8px; width: 90%; max-width: 900px; max-height: calc(100vh - 40px); overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.2s ease-out; box-sizing: border-box; }
         .modal-hdr { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 12px; }
-        .modal-txt { font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; }
-        .modal-close { font-size: 22px; font-weight: 700; color: #94a3b8; cursor: pointer; }
+        .modal-txt { font-size: 13px; font-weight: 700; color: #1e293b; text-transform: uppercase; }
+        .modal-close { font-size: 22px; font-weight: 700; color: #94a3b8; cursor: pointer; line-height: 1; }
         .modal-close:hover { color: #475569; }
-        .modal-tables-flex { display: flex; gap: 16px; width: 100%; }
-        .modal-half-pane { flex: 1; min-width: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
+        
+        .modal-tables-flex { display: flex; flex-direction: column; gap: 16px; width: 100%; }
+        .modal-half-pane { width: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
         .modal-half-title { padding: 6px 10px; font-size: 10px; font-weight: 700; color: #ffffff; text-transform: uppercase; text-align: center; }
         .bg-growth { background: #10b981; }
         .bg-loss { background: #ef4444; }
-        .modal-scrollable { max-height: 320px; overflow-y: auto; }
+        .modal-scrollable { max-height: 280px; overflow-y: auto; }
+        
         @keyframes slideDown { from { transform: translateY(-15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        /* High-resolution Breakpoint Adjustments */
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .modal-tables-flex { flex-direction: row; }
+            .modal-box { margin: 4% auto; }
+        }
     </style>
 
     <script>
@@ -109,15 +120,15 @@
         function openCustomerModal(deptName) {
             const data = customerDataset[deptName] || customerDataset["TOTAL"];
             document.getElementById("modalDeptTitle").innerText = deptName + " - Customer Performance";
-            // Growth table
+            
             let growthHtml = data.growth.map(c => `
-                <tr><td><b>${c.code}</b> - ${c.name}</td>
+                <tr><td><b>${c.code}</b><br>${c.name}</td>
                 <td>£${Math.round(c.cy).toLocaleString()}</td>
                 <td>£${Math.round(c.py).toLocaleString()}</td>
                 <td class="pos-metric">+£${Math.round(c.var).toLocaleString()}</td></tr>`).join('');
-            // Loss table (similar)
+                
             let lossHtml = data.loss.map(c => `
-                <tr><td><b>${c.code}</b> - ${c.name}</td>
+                <tr><td><b>${c.code}</b><br>${c.name}</td>
                 <td>£${Math.round(c.cy).toLocaleString()}</td>
                 <td>£${Math.round(c.py).toLocaleString()}</td>
                 <td class="neg-metric">-£${Math.abs(Math.round(c.var)).toLocaleString()}</td></tr>`).join('');
@@ -139,7 +150,7 @@
 <body>
     <div class="dashboard-grid">
         <div class="branch-header">
-            <div class="branch-title">NORTHFIELD</div>
+            <div class="branch-title">NORTHWOOD</div>
             <div class="branch-timestamp">Prior Month Performance - May 2024</div>
         </div>
 
@@ -176,21 +187,22 @@
 
         <div class="widget-panel">
             <div class="widget-header">Department Performance Breakdown</div>
-            <table>
-                <thead>
-                    <tr><th>Department</th><th>Sales CY</th><th>Sales PY</th><th>Sales Var%</th><th>GP CY</th><th>GP Var%</th><th>GP CY%</th><th>GP PY%</th></tr>
-                </thead>
-                <tbody>
-                    <tr onclick="openCustomerModal('BM Collected')"><td>BM Collected</td><td>£392,450</td><td>£371,200</td><td class="pos-metric">+5.7%</td><td>£112,800</td><td class="pos-metric">+8.4%</td><td>28.7%</td><td>27.1%</td></tr>
-                    <tr onclick="openCustomerModal('BM Delivered')"><td>BM Delivered</td><td>£498,200</td><td>£525,800</td><td class="neg-metric">-5.2%</td><td>£98,400</td><td class="pos-metric">+6.9%</td><td>19.8%</td><td>17.5%</td></tr>
-                    <tr onclick="openCustomerModal('Showroom')"><td>Showroom</td><td>£228,900</td><td>£198,400</td><td class="pos-metric">+15.4%</td><td>£63,200</td><td class="pos-metric">+9.2%</td><td>27.6%</td><td>28.9%</td></tr>
-                    <tr class="total-row" onclick="openCustomerModal('TOTAL')"><td><strong>Total (All)</strong></td><td><strong>£1,245,780</strong></td><td><strong>£1,218,900</strong></td><td class="pos-metric">+2.2%</td><td><strong>£308,400</strong></td><td class="pos-metric">+7.8%</td><td><strong>24.8%</strong></td><td><strong>23.1%</strong></td></tr>
-                </tbody>
-            </table>
+            <div class="table-overflow-wrapper">
+                <table>
+                    <thead>
+                        <tr><th>Department</th><th>Sales CY</th><th>Sales PY</th><th>Sales Var%</th><th>GP CY</th><th>GP Var%</th><th>GP CY%</th><th>GP PY%</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr onclick="openCustomerModal('BM Collected')"><td>BM Collected</td><td>£392,450</td><td>£371,200</td><td class="pos-metric">+5.7%</td><td>£112,800</td><td class="pos-metric">+8.4%</td><td>28.7%</td><td>27.1%</td></tr>
+                        <tr onclick="openCustomerModal('BM Delivered')"><td>BM Delivered</td><td>£498,200</td><td>£525,800</td><td class="neg-metric">-5.2%</td><td>£98,400</td><td class="pos-metric">+6.9%</td><td>19.8%</td><td>17.5%</td></tr>
+                        <tr onclick="openCustomerModal('Showroom')"><td>Showroom</td><td>£228,900</td><td>£198,400</td><td class="pos-metric">+15.4%</td><td>£63,200</td><td class="pos-metric">+9.2%</td><td>27.6%</td><td>28.9%</td></tr>
+                        <tr class="total-row" onclick="openCustomerModal('TOTAL')"><td><strong>Total (All)</strong></td><td><strong>£1,245,780</strong></td><td><strong>£1,218,900</strong></td><td class="pos-metric">+2.2%</td><td><strong>£308,400</strong></td><td class="pos-metric">+7.8%</td><td><strong>24.8%</strong></td><td><strong>23.1%</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Modal -->
     <div id="customerDrilldownModal" class="modal-overlay" onclick="if(event.target===this) closeCustomerModal();">
         <div class="modal-box">
             <div class="modal-hdr">
@@ -200,13 +212,13 @@
             <div class="modal-tables-flex">
                 <div class="modal-half-pane">
                     <div class="modal-half-title bg-growth">Top Growth</div>
-                    <div class="modal-scrollable">
+                    <div class="table-overflow-wrapper modal-scrollable">
                         <table><thead><tr><th>Customer</th><th>CY Sales</th><th>PY Sales</th><th>Variance</th></tr></thead><tbody id="growthTableBody"></tbody></table>
                     </div>
                 </div>
                 <div class="modal-half-pane">
                     <div class="modal-half-title bg-loss">Biggest Drops</div>
-                    <div class="modal-scrollable">
+                    <div class="table-overflow-wrapper modal-scrollable">
                         <table><thead><tr><th>Customer</th><th>CY Sales</th><th>PY Sales</th><th>Variance</th></tr></thead><tbody id="lossTableBody"></tbody></table>
                     </div>
                 </div>
@@ -220,7 +232,7 @@
         new Chart(document.getElementById("weekdaysChart").getContext("2d"), { type: "doughnut", data: { labels: ["CY", "PY"], datasets: [{ data: [19, 20], backgroundColor: ["#3b82f6", "#e2e8f0"] }] }, options: donutOptions });
         new Chart(document.getElementById("saturdaysChart").getContext("2d"), { type: "doughnut", data: { labels: ["CY", "PY"], datasets: [{ data: [5, 5], backgroundColor: ["#6366f1", "#f1f5f9"] }] }, options: donutOptions });
 
-        // Department Chart (fake data)
+        // Department Chart
         new Chart(document.getElementById("iqDepartmentChart").getContext("2d"), {
             type: "bar",
             data: {
@@ -233,7 +245,7 @@
             options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => "£" + v.toLocaleString() } } } }
         });
 
-        // Daily Sales Chart (fake data)
+        // Daily Sales Chart
         new Chart(document.getElementById("iqDailySalesChart").getContext("2d"), {
             type: "line",
             data: {
