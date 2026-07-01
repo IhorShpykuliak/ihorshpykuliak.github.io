@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>Sales Report — Email HTML (Outlook-safe)</title>
+<style>body{margin:0;padding:24px;background:#fff;}</style>
+</head>
+<body>
+<div style="color:#333333;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:20px;line-height:1.5;">
+
+<h2 style="color:#1A365D;font-size:20px;font-weight:600;margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid #E2E8F0;">Northfield Trade Supplies — Full Month Sales Performance</h2>
+
+<div style="color:#4A5568;font-size:14px;margin-bottom:20px;">
+<b>Sample report — demo/portfolio data only. No real customers, companies, or websites are represented.</b><br>
+<b>Current Period:</b> 01 Jun 2026 to 30 Jun 2026 &nbsp;|&nbsp; <b>Prior Period:</b> 01 Jun 2025 to 30 Jun 2025
+</div>
+
+<!-- Summary cards -->
+<table border="0" cellspacing="0" cellpadding="0" style="width:100%;max-width:950px;margin-bottom:25px;border-collapse:separate;border-spacing:12px 0;">
+<tr>
+  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
+    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Total Sales CY</div>
+    <div style="color:#0F172A;font-size:20px;font-weight:700;">£188,940.32</div>
+    <div style="color:#64748B;font-size:11px;margin-top:2px;">22 Working Days, 4 Saturdays</div>
+  </td>
+  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
+    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Total Sales LY</div>
+    <div style="color:#0F172A;font-size:20px;font-weight:700;">£211,760.90</div>
+    <div style="color:#64748B;font-size:11px;margin-top:2px;">21 Working Days, 4 Saturdays</div>
+  </td>
+  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
+    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">MTD Variance</div>
+    <div style="color:#DC2626;font-size:20px;font-weight:700;">-22,820.58</div>
+    <div style="color:#64748B;font-size:11px;margin-top:2px;">Net Performance difference</div>
+  </td>
+  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
+    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Variance %</div>
+    <div style="color:#DC2626;font-size:20px;font-weight:700;">-10.78 %</div>
+    <div style="color:#64748B;font-size:11px;margin-top:2px;">Growth / Loss</div>
+  </td>
+</tr>
+</table>
+
+<!-- Main table -->
+<table border="1" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-radius:4px;max-width:950px;border:1px solid #E2E8F0;">
+<tr>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:left;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Customer Code</th>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:left;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Customer Name</th>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Sales CY</th>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Sales LY</th>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Variance</th>
+  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Variance %</th>
+</tr>
+
+<tr style="font-weight:bold;background-color:#FFE4DC;">
+  <td colspan="2" style="font-size:12px;text-align:left;padding:7px 10px;border:1px solid #CBD5E1;">OVERALL TOTAL</td>
+  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">188,940.32</td>
+  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">211,760.90</td>
+  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">-22,820.58</td>
+  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">-10.78 %</td>
+</tr>
+
+<tr><td colspan="6" style="padding:5px;border:none;">&nbsp;</td></tr>
+
+<tr style="font-weight:bold;background-color:#E0F2FE;">
+  <td colspan="2" style="font-size:12px;text-align:left;padding:6px 10px;border:1px solid #E2E8F0;">TOTAL WEBSITES</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">64,210.55</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">98,430.10</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">-34,219.55</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">-34.76 %</td>
+</tr>
+<tr>
+  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">SAMPLESHOP.EXAMPLE</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">sampleshop.example</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">312.40</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">890.15</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-577.75</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-64.90 %</td>
+</tr>
+<tr>
+  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">BUDGETSUPPLIES.TEST</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">budgetsupplies.test</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,940.60</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,510.30</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-4,569.70</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-70.19 %</td>
+</tr>
+<tr>
+  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">MAINSTORE.EXAMPLE</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">mainstore.example</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">55,890.40</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">72,140.55</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-16,250.15</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-22.53 %</td>
+</tr>
+<tr>
+  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">TRAYSHOP.TEST</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">trayshop.test</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,067.15</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">18,889.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-12,821.95</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-67.87 %</td>
+</tr>
+
+<tr><td colspan="6" style="padding:5px;border:none;">&nbsp;</td></tr>
+
+<tr style="font-weight:bold;background-color:#F1F5F9;">
+  <td colspan="2" style="font-size:12px;text-align:left;padding:6px 10px;border:1px solid #E2E8F0;">TOTAL OTHER CUSTOMERS</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">109,830.27</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">104,690.85</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">5,139.42</td>
+  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">4.91 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC001</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Fictive Mechanical Services Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">9,140.20</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,220.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,920.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">46.94 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC002</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Placeholder Heating & Plumbing Co</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">7,260.90</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">7,510.40</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-249.50</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-3.32 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC003</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Sample City Gas Services Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,410.55</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">480.60</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">5,929.95</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,233.68 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC004</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Demo Build Contractors Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,340.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,340.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC005</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Testcase Property Maintenance</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,410.30</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,120.90</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-710.60</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-22.77 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC006</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Nominal Heating Care Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,980.40</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,610.10</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-629.70</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-24.12 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC007</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Generic Trade Interiors</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,120.80</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">90.20</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,030.60</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,142.35 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">CASH-SAMPLE</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Cash Sales (sample)</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">54,610.40</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">62,190.20</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-7,579.80</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-12.19 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">MP-SAMPLE</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Marketplace Sales (sample)</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,140.30</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,980.50</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-2,840.20</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-71.35 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC008</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Sandbox Renovations Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,210.50</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-2,210.50</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC009</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Stubdata Facilities Group</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,610.90</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-3,610.90</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
+</tr>
+<tr>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC010</td>
+  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Lorem Ipsum Developments Ltd</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">4,560.80</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-4,560.80</td>
+  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
+</tr>
+</table>
+
+<div style="color:#94A3B8;font-size:10.5px;margin-top:14px;">This is a demonstration report. All customer names, account codes, and website addresses are fictional and use IANA-reserved placeholder domains (.example / .test) that cannot resolve to real websites.</div>
+
+</div>
+</body></html>
