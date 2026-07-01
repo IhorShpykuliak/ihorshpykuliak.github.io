@@ -1,206 +1,250 @@
-<div style="color:#333333;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:20px;line-height:1.5;">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: "Segoe UI", sans-serif; background-color: #f8fafc; color: #1e293b; margin: 0; padding: 6px; font-size: 11px; }
+        .dashboard-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .branch-header { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #3b82f6; }
+        .branch-title { font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; }
+        .branch-timestamp { font-size: 9px; color: #64748b; }
+        .calendar-row { display: flex; gap: 8px; width: 100%; }
+        .donut-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; flex: 1; padding: 6px; display: flex; flex-direction: column; align-items: center; position: relative; height: 95px; }
+        .donut-title { font-size: 9px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+        .donut-wrapper { position: relative; height: 68px; width: 100%; max-width: 68px; }
+        .donut-center-value { position: absolute; top: 58%; left: 50%; transform: translate(-50%, -50%); font-size: 11px; font-weight: 700; color: #0f172a; text-align: center; white-space: nowrap; }
+        .donut-sub-label { font-size: 7px; color: #94a3b8; font-weight: 600; }
+        .kpi-row { display: flex; gap: 6px; width: 100%; }
+        .kpi-card { flex: 1; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 8px; display: flex; flex-direction: column; border-left: 3px solid #cbd5e1; }
+        .kpi-card.alert-border { border-left-color: #ef4444; }
+        .kpi-card.success-border { border-left-color: #10b981; }
+        .kpi-card.neutral-border { border-left-color: #3b82f6; }
+        .kpi-label { font-size: 9px; font-weight: 600; color: #64748b; text-transform: uppercase; }
+        .kpi-value { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+        .widget-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; width: 100%; }
+        .widget-header { background: #ffffff; padding: 8px 12px; border-bottom: 1px solid #edf2f7; font-weight: 600; color: #475569; font-size: 11px; text-transform: uppercase; }
+        .chart-canvas-wrapper { padding: 8px; position: relative; height: 190px; width: 100%; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 10.5px; }
+        th { background: #f8fafc; color: #64748b; font-weight: 600; padding: 6px 8px; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 8.5px; }
+        td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+        tr:hover td { background: #f8fafc; }
+.tab-btn { 
+            background: none; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; 
+            padding: 6px 12px; 
+            font-size: 10px; 
+            cursor: pointer; 
+            color: #64748b; 
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { background: #f1f5f9; }
+        .tab-btn.active { 
+            background: #3b82f6; 
+            color: #fff; 
+            border-color: #3b82f6; 
+        }
+        .total-row { background: #f1f5f9 !important; font-weight: 700; }
+        .pos-metric { color: #16a34a !important; font-weight: 600; }
+        .neg-metric { color: #dc2626 !important; font-weight: 600; }
+        .modal-overlay { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); }
+        .modal-box { background: #ffffff; margin: 4% auto; padding: 16px; border-radius: 8px; width: 85%; max-width: 900px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); animation: slideDown 0.2s ease-out; }
+        .modal-hdr { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 12px; }
+        .modal-txt { font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; }
+        .modal-close { font-size: 22px; font-weight: 700; color: #94a3b8; cursor: pointer; }
+        .modal-close:hover { color: #475569; }
+        .modal-tables-flex { display: flex; gap: 16px; width: 100%; }
+        .modal-half-pane { flex: 1; min-width: 0; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
+        .modal-half-title { padding: 6px 10px; font-size: 10px; font-weight: 700; color: #ffffff; text-transform: uppercase; text-align: center; }
+        .bg-growth { background: #10b981; }
+        .bg-loss { background: #ef4444; }
+        .modal-scrollable { max-height: 320px; overflow-y: auto; }
+        @keyframes slideDown { from { transform: translateY(-15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
 
-<h2 style="color:#1A365D;font-size:20px;font-weight:600;margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid #E2E8F0;">Northfield Trade Supplies — Full Month Sales Performance</h2>
+    <script>
+        const currentCostCentreName = "Northwood";
+        const customerDataset = {
+            "BM Collected": {
+                growth: [
+                    {name:"Apex Construction Ltd",code:"CUST-A01",cy:12450,py:8200,var:4250},
+                    {name:"Summit Homes Group",code:"CUST-A02",cy:9870,py:5400,var:4470},
+                    {name:"Vista Builders",code:"CUST-A03",cy:15680,py:9200,var:6480},
+                    {name:"Horizon Developments",code:"CUST-A04",cy:8740,py:3100,var:5640}
+                ],
+                loss: [
+                    {name:"Riverside Projects",code:"CUST-L01",cy:6800,py:19200,var:-12400},
+                    {name:"Oakwood Contractors",code:"CUST-L02",cy:12400,py:21500,var:-9100}
+                ]
+            },
+            "BM Delivered": {
+                growth: [
+                    {name:"Pinnacle Builders",code:"CUST-B01",cy:18400,py:9200,var:9200},
+                    {name:"Elite Construction",code:"CUST-B02",cy:15600,py:7300,var:8300}
+                ],
+                loss: [
+                    {name:"Metro Homes Ltd",code:"CUST-BL1",cy:9200,py:27800,var:-18600}
+                ]
+            },
+            "Plumbing & Heating": {
+                growth: [{name:"Swift Plumbing Ltd",code:"PH-001",cy:12400,py:6800,var:5600}],
+                loss: [{name:"Thermal Solutions",code:"PH-L01",cy:5400,py:14200,var:-8800}]
+            },
+            "Showroom": {
+                growth: [{name:"Design & Build Co",code:"SH-001",cy:28500,py:14200,var:14300}],
+                loss: [{name:"Heritage Homes",code:"SH-L01",cy:8900,py:21800,var:-12900}]
+            },
+            "TOTAL": {
+                growth: [
+                    {name:"Apex Construction Ltd",code:"CUST-A01",cy:24800,py:9800,var:15000},
+                    {name:"Summit Homes Group",code:"CUST-A02",cy:19800,py:7600,var:12200}
+                ],
+                loss: [
+                    {name:"Riverside Projects",code:"CUST-L01",cy:12400,py:35600,var:-23200}
+                ]
+            }
+        };
 
-<div style="color:#4A5568;font-size:14px;margin-bottom:20px;">
-<b>Sample report — demo/portfolio data only. No real customers, companies, or websites are represented.</b><br>
-<b>Current Period:</b> 01 Jun 2026 to 30 Jun 2026 &nbsp;|&nbsp; <b>Prior Period:</b> 01 Jun 2025 to 30 Jun 2025
-</div>
+        function openCustomerModal(deptName) {
+            const data = customerDataset[deptName] || customerDataset["TOTAL"];
+            document.getElementById("modalDeptTitle").innerText = deptName + " - Customer Performance";
+            // Growth table
+            let growthHtml = data.growth.map(c => `
+                <tr><td><b>${c.code}</b> - ${c.name}</td>
+                <td>£${Math.round(c.cy).toLocaleString()}</td>
+                <td>£${Math.round(c.py).toLocaleString()}</td>
+                <td class="pos-metric">+£${Math.round(c.var).toLocaleString()}</td></tr>`).join('');
+            // Loss table (similar)
+            let lossHtml = data.loss.map(c => `
+                <tr><td><b>${c.code}</b> - ${c.name}</td>
+                <td>£${Math.round(c.cy).toLocaleString()}</td>
+                <td>£${Math.round(c.py).toLocaleString()}</td>
+                <td class="neg-metric">-£${Math.abs(Math.round(c.var)).toLocaleString()}</td></tr>`).join('');
+            
+            document.getElementById("growthTableBody").innerHTML = growthHtml || "<tr><td colspan='4' style='text-align:center;padding:20px;color:#94a3b8;'>No data</td></tr>";
+            document.getElementById("lossTableBody").innerHTML = lossHtml || "<tr><td colspan='4' style='text-align:center;padding:20px;color:#94a3b8;'>No data</td></tr>";
+            document.getElementById("customerDrilldownModal").style.display = "block";
+        }
 
-<!-- Summary cards -->
-<table border="0" cellspacing="0" cellpadding="0" style="width:100%;max-width:950px;margin-bottom:25px;border-collapse:separate;border-spacing:12px 0;">
-<tr>
-  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
-    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Total Sales CY</div>
-    <div style="color:#0F172A;font-size:20px;font-weight:700;">£188,940.32</div>
-    <div style="color:#64748B;font-size:11px;margin-top:2px;">22 Working Days, 4 Saturdays</div>
-  </td>
-  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
-    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Total Sales LY</div>
-    <div style="color:#0F172A;font-size:20px;font-weight:700;">£211,760.90</div>
-    <div style="color:#64748B;font-size:11px;margin-top:2px;">21 Working Days, 4 Saturdays</div>
-  </td>
-  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
-    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">MTD Variance</div>
-    <div style="color:#DC2626;font-size:20px;font-weight:700;">-22,820.58</div>
-    <div style="color:#64748B;font-size:11px;margin-top:2px;">Net Performance difference</div>
-  </td>
-  <td style="vertical-align:top;background-color:#F8FAFC;width:25%;border-radius:6px;padding:12px 16px;border:1px solid #E2E8F0;">
-    <div style="color:#64748B;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:4px;letter-spacing:0.5px;">Variance %</div>
-    <div style="color:#DC2626;font-size:20px;font-weight:700;">-10.78 %</div>
-    <div style="color:#64748B;font-size:11px;margin-top:2px;">Growth / Loss</div>
-  </td>
-</tr>
-</table>
+        function closeCustomerModal() { document.getElementById("customerDrilldownModal").style.display = "none"; }
+        function showChart(type) {
+            document.getElementById("iqDepartmentChart").style.display = (type === "department") ? "block" : "none";
+            document.getElementById("iqDailySalesChart").style.display = (type === "daily") ? "block" : "none";
+            document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelector(`.tab-btn[data-tab="${type}"]`).classList.add("active");
+        }
+    </script>
+</head>
+<body>
+    <div class="dashboard-grid">
+        <div class="branch-header">
+            <div class="branch-title">NORTHWOOD</div>
+            <div class="branch-timestamp">Prior Month Performance - May 2024</div>
+        </div>
 
-<!-- Main table -->
-<table border="1" cellspacing="0" cellpadding="0" style="width:100%;border-collapse:collapse;border-radius:4px;max-width:950px;border:1px solid #E2E8F0;">
-<tr>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:left;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Customer Code</th>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:left;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Customer Name</th>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Sales CY</th>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Sales LY</th>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Variance</th>
-  <th style="color:#475569;font-size:11px;font-weight:600;text-transform:uppercase;text-align:right;background-color:#F1F5F9;padding:5px 10px;border:1px solid #E2E8F0;">Variance %</th>
-</tr>
+        <div class="calendar-row">
+            <div class="donut-card">
+                <div class="donut-title">Weekdays (Days)</div>
+                <div class="donut-wrapper"><canvas id="weekdaysChart" width="68" height="68"></canvas></div>
+                <div class="donut-center-value">19 / 20<div class="donut-sub-label">CY / PY</div></div>
+            </div>
+            <div class="donut-card">
+                <div class="donut-title">Saturdays (Days)</div>
+                <div class="donut-wrapper"><canvas id="saturdaysChart" width="68" height="68"></canvas></div>
+                <div class="donut-center-value">5 / 5<div class="donut-sub-label">CY / PY</div></div>
+            </div>
+        </div>
 
-<tr style="font-weight:bold;background-color:#FFE4DC;">
-  <td colspan="2" style="font-size:12px;text-align:left;padding:7px 10px;border:1px solid #CBD5E1;">OVERALL TOTAL</td>
-  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">188,940.32</td>
-  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">211,760.90</td>
-  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">-22,820.58</td>
-  <td style="font-size:12px;text-align:right;padding:7px 10px;border:1px solid #CBD5E1;">-10.78 %</td>
-</tr>
+        <div class="kpi-row">
+            <div class="kpi-card neutral-border"><div class="kpi-label">Sales (May)</div><div class="kpi-value">£1,245,780</div></div>
+            <div class="kpi-card alert-border"><div class="kpi-label">Var Sales</div><div class="kpi-value">+2.3%</div></div>
+            <div class="kpi-card neutral-border"><div class="kpi-label">Margin %</div><div class="kpi-value">25.8%</div></div>
+            <div class="kpi-card success-border"><div class="kpi-label">Var Margin</div><div class="kpi-value">+2.1%</div></div>
+        </div>
 
-<tr><td colspan="6" style="padding:5px;border:none;">&nbsp;</td></tr>
+        <div class="widget-panel">
+            <div class="widget-header" style="display:flex;gap:10px;">
+                <button class="tab-btn" data-tab="department" onclick="showChart('department')">Department Breakdown</button>
+                <button class="tab-btn active" data-tab="daily" onclick="showChart('daily')">Total Sales per Day</button>
+            </div>
+            <div class="chart-canvas-wrapper">
+                <canvas id="iqDepartmentChart" style="display:none"></canvas>
+                <canvas id="iqDailySalesChart"></canvas>
+            </div>
+        </div>
 
-<tr style="font-weight:bold;background-color:#E0F2FE;">
-  <td colspan="2" style="font-size:12px;text-align:left;padding:6px 10px;border:1px solid #E2E8F0;">TOTAL WEBSITES</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">64,210.55</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">98,430.10</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">-34,219.55</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">-34.76 %</td>
-</tr>
-<tr>
-  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">SAMPLESHOP.EXAMPLE</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">sampleshop.example</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">312.40</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">890.15</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-577.75</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-64.90 %</td>
-</tr>
-<tr>
-  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">BUDGETSUPPLIES.TEST</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">budgetsupplies.test</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,940.60</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,510.30</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-4,569.70</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-70.19 %</td>
-</tr>
-<tr>
-  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">MAINSTORE.EXAMPLE</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">mainstore.example</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">55,890.40</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">72,140.55</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-16,250.15</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-22.53 %</td>
-</tr>
-<tr>
-  <td style="color:#0369A1;font-size:12px;font-weight:500;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">TRAYSHOP.TEST</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">trayshop.test</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,067.15</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">18,889.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-12,821.95</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-67.87 %</td>
-</tr>
+        <div class="widget-panel">
+            <div class="widget-header">Department Performance Breakdown</div>
+            <table>
+                <thead>
+                    <tr><th>Department</th><th>Sales CY</th><th>Sales PY</th><th>Sales Var%</th><th>GP CY</th><th>GP Var%</th><th>GP CY%</th><th>GP PY%</th></tr>
+                </thead>
+                <tbody>
+                    <tr onclick="openCustomerModal('BM Collected')"><td>BM Collected</td><td>£392,450</td><td>£371,200</td><td class="pos-metric">+5.7%</td><td>£112,800</td><td class="pos-metric">+8.4%</td><td>28.7%</td><td>27.1%</td></tr>
+                    <tr onclick="openCustomerModal('BM Delivered')"><td>BM Delivered</td><td>£498,200</td><td>£525,800</td><td class="neg-metric">-5.2%</td><td>£98,400</td><td class="pos-metric">+6.9%</td><td>19.8%</td><td>17.5%</td></tr>
+                    <tr onclick="openCustomerModal('Showroom')"><td>Showroom</td><td>£228,900</td><td>£198,400</td><td class="pos-metric">+15.4%</td><td>£63,200</td><td class="pos-metric">+9.2%</td><td>27.6%</td><td>28.9%</td></tr>
+                    <tr class="total-row" onclick="openCustomerModal('TOTAL')"><td><strong>Total (All)</strong></td><td><strong>£1,245,780</strong></td><td><strong>£1,218,900</strong></td><td class="pos-metric">+2.2%</td><td><strong>£308,400</strong></td><td class="pos-metric">+7.8%</td><td><strong>24.8%</strong></td><td><strong>23.1%</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-<tr><td colspan="6" style="padding:5px;border:none;">&nbsp;</td></tr>
+    <!-- Modal -->
+    <div id="customerDrilldownModal" class="modal-overlay" onclick="if(event.target===this) closeCustomerModal();">
+        <div class="modal-box">
+            <div class="modal-hdr">
+                <div id="modalDeptTitle" class="modal-txt">Department Performance</div>
+                <span class="modal-close" onclick="closeCustomerModal()">×</span>
+            </div>
+            <div class="modal-tables-flex">
+                <div class="modal-half-pane">
+                    <div class="modal-half-title bg-growth">Top Growth</div>
+                    <div class="modal-scrollable">
+                        <table><thead><tr><th>Customer</th><th>CY Sales</th><th>PY Sales</th><th>Variance</th></tr></thead><tbody id="growthTableBody"></tbody></table>
+                    </div>
+                </div>
+                <div class="modal-half-pane">
+                    <div class="modal-half-title bg-loss">Biggest Drops</div>
+                    <div class="modal-scrollable">
+                        <table><thead><tr><th>Customer</th><th>CY Sales</th><th>PY Sales</th><th>Variance</th></tr></thead><tbody id="lossTableBody"></tbody></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<tr style="font-weight:bold;background-color:#F1F5F9;">
-  <td colspan="2" style="font-size:12px;text-align:left;padding:6px 10px;border:1px solid #E2E8F0;">TOTAL OTHER CUSTOMERS</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">109,830.27</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">104,690.85</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">5,139.42</td>
-  <td style="font-size:12px;text-align:right;padding:6px 10px;border:1px solid #E2E8F0;">4.91 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC001</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Fictive Mechanical Services Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">9,140.20</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,220.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,920.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">46.94 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC002</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Placeholder Heating & Plumbing Co</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">7,260.90</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">7,510.40</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-249.50</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-3.32 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC003</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Sample City Gas Services Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">6,410.55</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">480.60</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">5,929.95</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,233.68 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC004</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Demo Build Contractors Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,340.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,340.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC005</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Testcase Property Maintenance</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,410.30</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,120.90</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-710.60</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-22.77 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC006</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Nominal Heating Care Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,980.40</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,610.10</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-629.70</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-24.12 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC007</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Generic Trade Interiors</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,120.80</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">90.20</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,030.60</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,142.35 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">CASH-SAMPLE</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Cash Sales (sample)</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">54,610.40</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">62,190.20</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-7,579.80</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-12.19 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">MP-SAMPLE</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Marketplace Sales (sample)</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">1,140.30</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,980.50</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-2,840.20</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-71.35 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC008</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Sandbox Renovations Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">2,210.50</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-2,210.50</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC009</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Stubdata Facilities Group</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">3,610.90</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-3,610.90</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
-</tr>
-<tr>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">ACC010</td>
-  <td style="font-size:12px;text-align:left;padding:5px 10px;border:1px solid #E2E8F0;">Lorem Ipsum Developments Ltd</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">0.00</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">4,560.80</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-4,560.80</td>
-  <td style="font-size:12px;text-align:right;padding:5px 10px;border:1px solid #E2E8F0;">-100.00 %</td>
-</tr>
-</table>
+    <script>
+        // Donut Charts
+        const donutOptions = { responsive: true, maintainAspectRatio: false, cutout: "80%", plugins: { legend: { display: false } } };
+        new Chart(document.getElementById("weekdaysChart").getContext("2d"), { type: "doughnut", data: { labels: ["CY", "PY"], datasets: [{ data: [19, 20], backgroundColor: ["#3b82f6", "#e2e8f0"] }] }, options: donutOptions });
+        new Chart(document.getElementById("saturdaysChart").getContext("2d"), { type: "doughnut", data: { labels: ["CY", "PY"], datasets: [{ data: [5, 5], backgroundColor: ["#6366f1", "#f1f5f9"] }] }, options: donutOptions });
 
-<div style="color:#94A3B8;font-size:10.5px;margin-top:14px;">This is a demonstration report. All customer names, account codes, and website addresses are fictional and use IANA-reserved placeholder domains (.example / .test) that cannot resolve to real websites.</div>
+        // Department Chart (fake data)
+        new Chart(document.getElementById("iqDepartmentChart").getContext("2d"), {
+            type: "bar",
+            data: {
+                labels: ['BM Collected','BM Delivered','Showroom'],
+                datasets: [
+                    { label: "CY", data: [392450,498200,228900], backgroundColor: "rgba(59,130,246,0.7)" },
+                    { label: "PY", data: [371200,525800,198400], backgroundColor: "rgba(148,163,184,0.4)" }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => "£" + v.toLocaleString() } } } }
+        });
 
-</div>
+        // Daily Sales Chart (fake data)
+        new Chart(document.getElementById("iqDailySalesChart").getContext("2d"), {
+            type: "line",
+            data: {
+                labels: ["01","02","03","05","06","07","08","09","10","11","12","13","14","15"],
+                datasets: [
+                    { label: "CY", data: [58400,42100,67200,51800,63400,48900,71200,39500,68100,54200,59800,47300,66500,52100], borderColor: "#6366f1", tension: 0.3, fill: true },
+                    { label: "PY", data: [51200,63800,45100,57200,48900,70100,39200,64500,51800,67300,42100,58900,47200,63400], borderColor: "#94a3b8", borderDash: [5,5] }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => "£" + v.toLocaleString() } } } }
+        });
+    </script>
+</body>
+</html>
