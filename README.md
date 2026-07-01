@@ -1,3 +1,5 @@
+# [ihorshpykuliak.github.io](https://ihorshpykuliak.github.io/)
+
 # Dashboard & Report Examples
 
 A small hub page for browsing front-end dashboard and report examples, all built with synthetic (non-real) data.
@@ -33,4 +35,4 @@ The landing page picks it up automatically — no other changes needed.
 
 ## Live site
 
-Once deployed via GitHub Pages: `https://<username>.github.io/<repo-name>/`
+Once deployed via GitHub Pages: `https://ihorshpykuliak.github.io/<repo-name>/`
