@@ -12,7 +12,6 @@
     line-height:1.5;
   }
   .page{max-width:960px;margin:0 auto;padding:44px 48px 60px;}
-
   header{text-align:center;margin-bottom:26px;}
   header h1{
     font-size:34px;font-weight:300;letter-spacing:10px;margin:0 0 8px;color:#1a1a1a;
@@ -21,9 +20,7 @@
     font-size:12px;letter-spacing:3px;color:#555;text-transform:uppercase;
   }
   hr.top-rule{border:none;border-top:2px solid #1a1a1a;margin:22px 0 26px;}
-
   .grid{display:grid;grid-template-columns:290px 1fr;gap:38px;}
-
   h2.section{
     font-size:13px;letter-spacing:3px;font-weight:700;color:#1a1a1a;
     margin:0 0 12px;text-transform:uppercase;
@@ -33,29 +30,38 @@
     margin:22px 0 12px;text-transform:uppercase;
   }
   .divider{border:none;border-top:1px dashed #bbb;margin:18px 0;}
-
   ul{margin:0 0 4px;padding-left:18px;}
   li{margin-bottom:7px;font-size:13.5px;}
-
   .contact-list{list-style:none;padding:0;margin:0;}
   .contact-list li{display:flex;align-items:center;gap:10px;font-size:13.5px;margin-bottom:10px;}
   .contact-list a{color:#2B2B2B;text-decoration:none;}
   .contact-list a:hover{text-decoration:underline;}
-
   .job{margin-bottom:20px;}
   .job-title{font-weight:700;font-size:14.5px;color:#1a1a1a;margin-bottom:2px;}
-  .job-meta{display:flex;justify-content:space-between;font-size:13px;color:#444;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+  .job-meta{display:flex;justify-content:flex-start;gap:15px;font-size:13px;color:#444;margin-bottom:8px;flex-wrap:wrap;}
   .job-meta .company{font-style:normal;}
-  .job-meta .dates{white-space:nowrap;font-weight:600;}
-
+  .job-meta .dates{white-space:nowrap;font-weight:600;margin-left:auto;}
   .edu-block{margin-bottom:4px;}
   .edu-title{font-weight:700;font-size:13.5px;}
   .edu-dates{font-size:12.5px;color:#555;margin:2px 0 4px;}
   .edu-degree{font-weight:600;font-size:13px;margin-bottom:10px;}
-
   .profile p{font-size:13.5px;margin:0 0 12px;}
-
   footer{border-top:1px solid #1a1a1a;margin-top:36px;}
+
+  @media (max-width: 850px) {
+    .grid {grid-template-columns: 240px 1fr; gap: 25px;}
+    .page {padding: 30px 24px;}
+  }
+  @media (max-width: 650px) {
+    .page {padding: 20px 16px;}
+    header h1 {font-size: 26px; letter-spacing: 5px;}
+    header .role {font-size: 11px; letter-spacing: 1px;}
+    .grid {grid-template-columns: 1fr; gap: 20px;}
+    .left-col {border-bottom: 2px solid #1a1a1a; padding-bottom: 15px;}
+    .left-col .divider:last-of-type {display: none;}
+    .job-meta {flex-direction: column; gap: 2px;}
+    .job-meta .dates {margin-left: 0;}
+  }
 </style>
 </head>
 <body>
@@ -69,9 +75,7 @@
 
   <div class="grid">
 
-    <!-- ===== LEFT COLUMN ===== -->
     <div class="left-col">
-
       <h2 class="section">Contact</h2>
       <ul class="contact-list">
         <li>07384 757980</li>
@@ -131,12 +135,9 @@
         <li>Willingness to travel for stakeholder engagement and training</li>
         <li>Volunteering: Vice Chair of Trustee – Lichfield District City of Sanctuary (LDCoS), Lichfield Litter Legends</li>
       </ul>
-
     </div>
 
-    <!-- ===== RIGHT COLUMN ===== -->
     <div class="right-col">
-
       <h2 class="section">Profile</h2>
       <div class="profile">
         <p>Analytics/Data Engineer with hands-on experience designing data solutions using SQL, Power BI, and Python in complex business environments.</p>
@@ -202,7 +203,6 @@
           <li>Developed and maintained PLC programs (FBD, LAD, STL) and associated technical documentation.</li>
         </ul>
       </div>
-
     </div>
 
   </div>
