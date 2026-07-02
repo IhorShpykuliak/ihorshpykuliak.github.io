@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ihor Shpykuliak — Interactive CV</title>
+<style>
+  *{box-sizing:border-box;}
+  :root{
+    --bg:#ffffff; --fg:#2B2B2B; --heading:#1a1a1a; --muted:#555; --muted-soft:#888;
+    --card:#fafafa; --card-border:#eee; --divider:#bbb; --chip-border:#ccc;
+  }
+  [data-theme="dark"]{
+    --bg:#14171c; --fg:#d8dbe0; --heading:#f2f3f5; --muted:#9aa2ad; --muted-soft:#727a86;
+    --card:#1c2027; --card-border:#2a2f38; --divider:#333844; --chip-border:#3a4049;
+  }
+  body{
+    margin:0;background:var(--bg);color:var(--fg);
+    font-family:'Segoe UI',Arial,Helvetica,sans-serif;
+    line-height:1.5; transition:background .2s, color .2s;
+  }
+  a{color:inherit;}
+
+  /* ---- Progress bar ---- */
+  .progress-bar{position:fixed;top:0;left:0;height:3px;background:#C97A2B;width:0%;z-index:30;transition:width .1s;}
+
+  /* ---- Toolbar ---- */
+  .toolbar{
+    position:sticky;top:0;z-index:20;background:#1a1a1a;color:#fff;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 24px;font-size:12.5px;
+  }
+  .toolbar .name{letter-spacing:2px;font-weight:600;}
+  .toolbar .actions{display:flex;gap:10px;}
+  .toolbar button{
+    background:transparent;border:1px solid #666;color:#fff;
+    font-size:11.5px;padding:6px 12px;border-radius:4px;cursor:pointer;
+    font-family:inherit;
+  }
+  .toolbar button:hover{background:#333;}
+
+  .layout{display:grid;grid-template-columns:190px 1fr;max-width:1180px;margin:0 auto;}
+
+  /* ---- Side nav ---- */
+  nav.sidenav{
+    position:sticky;top:45px;align-self:start;
+    padding:36px 0 40px 24px;height:calc(100vh - 45px);
+  }
+  nav.sidenav a{
+    display:block;font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--muted-soft);text-decoration:none;padding:7px 0;border-left:2px solid transparent;padding-left:12px;
+    transition:color .15s, border-color .15s;
+  }
+  nav.sidenav a:hover{color:var(--heading);}
+  nav.sidenav a.active{color:var(--heading);font-weight:700;border-left-color:#C97A2B;}
+
+  /* ---- Page ---- */
+  .page{padding:36px 48px 60px;}
+
+  header.intro{text-align:center;margin-bottom:26px;}
+  header.intro h1{
+    font-size:34px;font-weight:300;letter-spacing:10px;margin:0 0 8px;color:var(--heading);
+  }
+  header.intro .role{
+    font-size:12px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;
+  }
+  hr.top-rule{border:none;border-top:2px solid var(--heading);margin:22px 0 26px;}
+
+  .grid{display:grid;grid-template-columns:290px 1fr;gap:38px;}
+
+  h2.section{
+    font-size:13px;letter-spacing:3px;font-weight:700;color:var(--heading);
+    margin:0 0 12px;text-transform:uppercase;scroll-margin-top:60px;
+  }
+  h3.section{
+    font-size:12.5px;letter-spacing:2px;font-weight:700;color:var(--heading);
+    margin:22px 0 12px;text-transform:uppercase;
+  }
+  .divider{border:none;border-top:1px dashed var(--divider);margin:18px 0;}
+
+  ul{margin:0 0 4px;padding-left:18px;}
+  li{margin-bottom:7px;font-size:13.5px;}
+
+  .contact-list{list-style:none;padding:0;margin:0;}
+  .contact-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:10px;}
+  .contact-list a:hover{text-decoration:underline;}
+  .copy-btn{
+    background:none;border:1px solid var(--chip-border);color:var(--muted-soft);
+    font-size:10px;padding:3px 7px;border-radius:4px;cursor:pointer;font-family:inherit;
+    text-transform:uppercase;letter-spacing:0.04em;flex-shrink:0;
+  }
+  .copy-btn:hover{border-color:#C97A2B;color:#C97A2B;}
+  .copy-btn.copied{border-color:#3F7A5A;color:#3F7A5A;}
+
+  /* ---- Skill chips (interactive) ---- */
+  .skills-hint{font-size:11px;color:var(--muted-soft);margin:-4px 0 10px;}
+  .chip-list{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 4px;padding:0;list-style:none;}
+  .chip{
+    font-size:11.5px;padding:5px 10px;border-radius:14px;border:1px solid var(--chip-border);
+    background:var(--card);cursor:pointer;user-select:none;transition:all .15s;color:var(--fg);
+  }
+  .chip:hover{border-color:#C97A2B;}
+  .chip.on{background:#C97A2B;color:#fff;border-color:#C97A2B;}
+
+  li.hit{background:#fff4d6;border-radius:3px;padding:2px 4px;margin-left:-4px;color:#1a1a1a;}
+  [data-theme="dark"] li.hit{background:#4a3a15;color:#f2e6c8;}
+
+  .edu-block{margin-bottom:4px;}
+  .edu-title{font-weight:700;font-size:13.5px;}
+  .edu-dates{font-size:12.5px;color:var(--muted);margin:2px 0 4px;}
+  .edu-degree{font-weight:600;font-size:13px;margin-bottom:10px;}
+
+  .profile p{font-size:13.5px;margin:0 0 12px;}
+
+  /* ---- Timeline ---- */
+  .timeline{display:flex;gap:6px;margin-bottom:18px;}
+  .timeline-seg{
+    flex:1;height:8px;border-radius:4px;cursor:pointer;position:relative;
+    background:var(--card-border);transition:opacity .15s;
+  }
+  .timeline-seg[data-active="true"]{background:#C97A2B;}
+  .timeline-seg:hover{opacity:0.8;}
+  .timeline-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted-soft);margin:-12px 0 20px;}
+
+  /* ---- Accordion jobs ---- */
+  .job{margin-bottom:14px;border:1px solid var(--card-border);border-radius:6px;overflow:hidden;
+       opacity:0; transform:translateY(10px); transition:opacity .4s ease, transform .4s ease;}
+  .job.revealed{opacity:1;transform:translateY(0);}
+  .job-head{
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+    padding:13px 16px;cursor:pointer;background:var(--card);
+  }
+  .job-head:hover{filter:brightness(1.03);}
+  [data-theme="dark"] .job-head:hover{filter:brightness(1.2);}
+  .job-title{font-weight:700;font-size:14.5px;color:var(--heading);}
+  .job-meta{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .job-toggle{font-size:16px;color:var(--muted-soft);transition:transform .2s;flex-shrink:0;}
+  .job.open .job-toggle{transform:rotate(45deg);}
+  .job-body{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 16px;}
+  .job.open .job-body{padding:4px 16px 16px;}
+  .job-body ul{margin:6px 0 0;}
+
+  footer.end{border-top:1px solid var(--heading);margin-top:36px;padding-top:14px;font-size:11px;color:var(--muted-soft);text-align:center;}
+
+  /* ---- Print ---- */
+  @media print{
+    .toolbar, nav.sidenav, .progress-bar, .copy-btn{display:none !important;}
+    .skills-hint, .timeline, .timeline-labels{display:none !important;}
+
+    body{font-size:11.5px;background:#fff;color:#000;}
+    .layout{display:block;}
+    .page{padding:0;}
+
+    header.intro{margin-bottom:14px;}
+    hr.top-rule{margin:14px 0 16px;}
+
+    .grid{display:block;}
+    .left-col{
+      float:left;width:31%;margin-right:5%;
+    }
+    .right-col{
+      float:left;width:64%;
+    }
+    .page::after{content:"";display:block;clear:both;}
+
+    /* keep related content together, never split mid-block */
+    h2.section, h3.section{break-after:avoid; page-break-after:avoid;}
+    .edu-block, .job, .profile, .chip-list, li{
+      break-inside:avoid; page-break-inside:avoid;
+    }
+    .divider{break-before:avoid; page-break-before:avoid;}
+
+    .job{
+      opacity:1 !important; transform:none !important;
+      border:none; margin-bottom:12px;
+    }
+    .job-body{max-height:none !important; padding:2px 0 0 !important;}
+    .job-head{padding:0 0 4px; background:none; cursor:default;}
+    .job-toggle{display:none;}
+
+    .chip{border:none; background:none; padding:0; margin-right:4px;}
+    .chip::after{content:" · ";}
+    .chip:last-child::after{content:"";}
+
+    a[href="#"]{color:inherit; text-decoration:none;}
+
+    footer.end{display:none;}
+  }
+
+  @media (max-width:900px){
+    .layout{grid-template-columns:1fr;}
+    nav.sidenav{display:none;}
+    .grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="progress-bar" id="progress-bar"></div>
+
+<div class="toolbar">
+  <span class="name">IHOR SHPYKULIAK — CV</span>
+  <div class="actions">
+    <button id="theme-toggle">🌙 Dark mode</button>
+    <button id="expand-all">Expand all roles</button>
+    <button id="print-btn">Print / Save PDF</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <nav class="sidenav" id="sidenav">
+    <a href="#contact" data-target="contact">Contact</a>
+    <a href="#core-skills" data-target="core-skills">Core Skills</a>
+    <a href="#technical-skills" data-target="technical-skills">Technical Skills</a>
+    <a href="#education" data-target="education">Education</a>
+    <a href="#additional" data-target="additional">Additional Info</a>
+    <a href="#profile" data-target="profile">Profile</a>
+    <a href="#achievements" data-target="achievements">Achievements</a>
+    <a href="#experience" data-target="experience">Experience</a>
+  </nav>
+
+  <div class="page">
+
+    <header class="intro">
+      <h1>IHOR SHPYKULIAK</h1>
+      <div class="role">ANALYTICS ENGINEER | DATA ENGINEER | DATA QUALITY &amp; ERP SYSTEMS</div>
+    </header>
+    <hr class="top-rule">
+
+    <div class="grid">
+
+      <!-- ===== LEFT COLUMN ===== -->
+      <div class="left-col">
+
+        <h2 class="section" id="contact">Contact</h2>
+        <ul class="contact-list">
+          <li><span>07384 757980</span><button class="copy-btn" data-copy="07384 757980">Copy</button></li>
+          <li><span>ihorshpykuliak@gmail.com</span><button class="copy-btn" data-copy="ihorshpykuliak@gmail.com">Copy</button></li>
+          <li><a href="#">LinkedIn</a></li>
+          <li>Lichfield, UK</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2 class="section" id="core-skills">Core Skills</h2>
+        <div class="skills-hint">Click a skill to highlight it in Work Experience →</div>
+        <ul class="chip-list" id="chip-list">
+          <li class="chip" data-kw="data modelling">Data Modelling &amp; Transformation</li>
+          <li class="chip" data-kw="sql">SQL Development &amp; Optimisation (T-SQL)</li>
+          <li class="chip" data-kw="power bi">Power BI &amp; Data Visualisation</li>
+          <li class="chip" data-kw="dax">DAX &amp; Performance Optimisation</li>
+          <li class="chip" data-kw="api">Data Integration &amp; APIs</li>
+          <li class="chip" data-kw="python">Automation &amp; Data Processing (Python, Power Automate)</li>
+          <li class="chip" data-kw="sdlc">SDLC (Requirements, Testing &amp; Deployment)</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2 class="section" id="technical-skills">Technical Skills</h2>
+        <ul>
+          <li><strong>Data &amp; Analytics:</strong> SQL (T-SQL), Power BI, DAX, Data Modelling</li>
+          <li><strong>Automation &amp; Processing:</strong> Python, Power Automate, HTML, CSS</li>
+          <li><strong>ERP / Business Systems:</strong> Intact IQ, Syrinx</li>
+          <li><strong>Data Integration:</strong> REST APIs, Data Integration, Data Synchronisation</li>
+          <li><strong>Integrations &amp; APIs:</strong> REST APIs, data synchronisation, third-party system integration</li>
+          <li><strong>Tools:</strong> Git/GitHub, Lansweeper, Active Directory</li>
+          <li><strong>Industrial Systems:</strong> SCADA / DCS (Honeywell, ABB, WinCC)</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2 class="section" id="education">Education</h2>
+        <div class="edu-block">
+          <div class="edu-title">National Technical University of Ukraine 'Kyiv Polytechnic Institute'</div>
+          <div class="edu-dates">2012-2016</div>
+          <div class="edu-degree">Bachelor's Degree in Computer Engineering</div>
+        </div>
+
+        <h3 class="section">Courses</h3>
+        <ul>
+          <li>Power BI Desktop for Business Intelligence - Udemy</li>
+          <li>Python in Microsoft Power BI to Enhance Reporting Power - Udemy</li>
+          <li>Rolling Scopes School (JS, HTML,CSS) - EPAM</li>
+          <li>Git &amp; GitHub - Version Control - Coursera (offered by Atlassian)</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2 class="section" id="additional">Additional Information</h2>
+        <ul>
+          <li>Eligible to work in the UK</li>
+          <li>Willingness to travel for stakeholder engagement and training</li>
+          <li>Volunteering: Vice Chair of Trustee – Lichfield District City of Sanctuary (LDCoS), Lichfield Litter Legends</li>
+        </ul>
+
+      </div>
+
+      <!-- ===== RIGHT COLUMN ===== -->
+      <div class="right-col">
+
+        <h2 class="section" id="profile">Profile</h2>
+        <div class="profile">
+          <p>Analytics/Data Engineer with hands-on experience designing data solutions using SQL, Power BI, and Python in complex business environments.</p>
+          <p>Strong expertise in data modelling, DAX, and SQL optimisation, building high-performance semantic models and reports.</p>
+          <p>Experienced across the full data lifecycle, including data modelling, reporting, performance tuning, and system integrations.</p>
+          <p>Proven ability to deliver reliable, business-ready data solutions and work effectively with both technical teams and stakeholders.</p>
+        </div>
+
+        <h3 class="section" id="achievements">Key Achievements</h3>
+        <ul>
+          <li>Designed and optimised Power BI semantic models and advanced DAX measures, significantly improving report performance and usability</li>
+          <li>Delivered API integration between Syrinx and Hilti On!Track, achieving 100% asset movement visibility and improving data accuracy</li>
+          <li>Implemented EDI (Electronic Data Interchange) solution, automating ~75% of invoice processing, reducing manual effort and improving data quality and processing efficiency</li>
+          <li>Automated data workflows using Python, SQL, and Power Automate, reducing manual effort by ~30–40% and improving processing efficiency</li>
+          <li>Led implementation of automation upgrades for industrial control systems in a catalytic reforming unit, improving real-time data reliability, system performance, and operational monitoring in a high-risk production environment</li>
+        </ul>
+
+        <hr class="divider">
+
+        <h2 class="section" id="experience">Work Experience</h2>
+        <div class="skills-hint">Click a role to expand it — or click the timeline below</div>
+
+        <div class="timeline" id="timeline">
+          <div class="timeline-seg" data-job-target="job-1" title="2023–present"></div>
+          <div class="timeline-seg" data-job-target="job-2" title="2022–2023"></div>
+          <div class="timeline-seg" data-job-target="job-3" title="2010–2022"></div>
+        </div>
+        <div class="timeline-labels"><span>2023 – present</span><span>2010 – 2023</span></div>
+
+        <div class="job open" data-job id="job-1">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Business / Software Support Analyst</div>
+              <div class="job-meta">Walter Tipper Limited / Lichfield, UK &nbsp;·&nbsp; 2023-present</div>
+            </div>
+            <span class="job-toggle">＋</span>
+          </div>
+          <div class="job-body">
+            <ul>
+              <li>Analyse complex operational and business datasets using SQL and Power BI to generate actionable insights supporting management and operational decision-making.</li>
+              <li>Design, optimise, and maintain Microsoft SQL Server databases, queries, and stored procedures to ensure efficient data storage, performance, and data integrity.</li>
+              <li>Designed and maintained enterprise-grade semantic data models in Power BI to deliver fast, scalable self-service analytics and actionable business insights.</li>
+              <li>Developed advanced DAX measures to support business reporting and performance optimisation</li>
+              <li>Support SDLC and project activities by assisting with requirements gathering, documenting business processes, supporting testing, and implementing system changes.</li>
+              <li>Contribute to business process optimisation initiatives by identifying inefficiencies and recommending data-driven improvements.</li>
+              <li>Develop automation and data-processing scripts using Python and C# to improve data workflows and reduce manual effort.</li>
+              <li>Led a business-critical integration project between hire system(Syrinx) and Hilti On!Track, designing and supporting API-based data exchange to improve asset visibility and data accuracy across systems.</li>
+              <li>Collaborate with cross-functional teams (operations, finance, third-party) and participate in meetings and workshops to facilitate effective communication between business and technical teams.</li>
+              <li>Perform root cause analysis on data and reporting issues, proposing long-term improvements to improve data accuracy and reliability.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="job" data-job id="job-2">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Online Teacher</div>
+              <div class="job-meta">Freelance / Kremenchuk, UA &nbsp;·&nbsp; 2022-2023</div>
+            </div>
+            <span class="job-toggle">＋</span>
+          </div>
+          <div class="job-body">
+            <ul>
+              <li>Delivered IT training to children aged 9-13, covering programming, web development, and IT Basics.</li>
+              <li>Relocated from Ukraine to the UK to join the family in January 2023.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="job" data-job id="job-3">
+          <div class="job-head">
+            <div>
+              <div class="job-title">Automation &amp; Control Systems Engineer</div>
+              <div class="job-meta">JSC «Ukrtatnafta» / Kremenchuk, UA &nbsp;·&nbsp; 2010-2022</div>
+            </div>
+            <span class="job-toggle">＋</span>
+          </div>
+          <div class="job-body">
+            <ul>
+              <li>Designed, implemented, and supported industrial automation and SCADA/DCS systems in a large-scale manufacturing environment.</li>
+              <li>Worked with real-time industrial data systems where accuracy, reliability, and system uptime were critical.</li>
+              <li>Developed and maintained PLC programs (FBD, LAD, STL) and associated technical documentation.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <footer class="end">CV of Ihor Shpykuliak — content unchanged from the original document.</footer>
+
+  </div>
+</div>
+
+<script>
+// ---- Theme toggle ----
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn.addEventListener('click', ()=>{
+  const isDark = document.body.dataset.theme === 'dark';
+  document.body.dataset.theme = isDark ? 'light' : 'dark';
+  themeBtn.textContent = isDark ? '🌙 Dark mode' : '☀️ Light mode';
+});
+
+// ---- Reading progress bar ----
+const progressBar = document.getElementById('progress-bar');
+window.addEventListener('scroll', ()=>{
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progressBar.style.width = scrolled + '%';
+});
+
+// ---- Copy-to-clipboard contact buttons ----
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(btn.dataset.copy);
+      const original = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      btn.classList.add('copied');
+      setTimeout(()=>{ btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    }catch(e){ /* clipboard unavailable — silently ignore */ }
+  });
+});
+
+// ---- Accordion for job entries ----
+document.querySelectorAll('.job').forEach(job=>{
+  const head = job.querySelector('.job-head');
+  const body = job.querySelector('.job-body');
+  function sync(){
+    body.style.maxHeight = job.classList.contains('open') ? body.scrollHeight + 'px' : '0px';
+  }
+  head.addEventListener('click', ()=>{
+    job.classList.toggle('open');
+    sync();
+  });
+  sync();
+  window.addEventListener('resize', ()=>{ if(job.classList.contains('open')) sync(); });
+});
+
+document.getElementById('expand-all').addEventListener('click', function(){
+  const jobs = document.querySelectorAll('.job');
+  const allOpen = [...jobs].every(j=>j.classList.contains('open'));
+  jobs.forEach(j=>{
+    j.classList.toggle('open', !allOpen);
+    const body = j.querySelector('.job-body');
+    body.style.maxHeight = !allOpen ? body.scrollHeight + 'px' : '0px';
+  });
+  this.textContent = allOpen ? 'Expand all roles' : 'Collapse all roles';
+});
+
+// ---- Print / Save as PDF ----
+document.getElementById('print-btn').addEventListener('click', ()=>{
+  document.querySelectorAll('.job').forEach(j=>{
+    j.classList.add('open');
+    j.querySelector('.job-body').style.maxHeight = 'none';
+  });
+  window.print();
+});
+
+// ---- Skill chip highlighting ----
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    const wasOn = chip.classList.contains('on');
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    document.querySelectorAll('.job li.hit').forEach(li=>li.classList.remove('hit'));
+
+    if(wasOn) return;
+    chip.classList.add('on');
+    const kw = chip.dataset.kw;
+    document.querySelectorAll('.job li').forEach(li=>{
+      if(li.textContent.toLowerCase().includes(kw)){
+        li.classList.add('hit');
+        const job = li.closest('.job');
+        if(!job.classList.contains('open')){
+          job.classList.add('open');
+          job.querySelector('.job-body').style.maxHeight = job.querySelector('.job-body').scrollHeight + 'px';
+        }
+      }
+    });
+  });
+});
+
+// ---- Career timeline: click a segment to jump to & open that role ----
+document.querySelectorAll('.timeline-seg').forEach(seg=>{
+  seg.addEventListener('click', ()=>{
+    const job = document.getElementById(seg.dataset.jobTarget);
+    if(!job) return;
+    document.querySelectorAll('.timeline-seg').forEach(s=>s.dataset.active = 'false');
+    seg.dataset.active = 'true';
+    if(!job.classList.contains('open')){
+      job.classList.add('open');
+      job.querySelector('.job-body').style.maxHeight = job.querySelector('.job-body').scrollHeight + 'px';
+    }
+    job.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+});
+document.querySelector('.timeline-seg[data-job-target="job-1"]').dataset.active = 'true';
+
+// ---- Side nav scroll-spy ----
+const navLinks = [...document.querySelectorAll('.sidenav a')];
+const targets = navLinks.map(a => document.getElementById(a.dataset.target)).filter(Boolean);
+const spyObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      navLinks.forEach(a=>a.classList.remove('active'));
+      const link = navLinks.find(a=>a.dataset.target === entry.target.id);
+      if(link) link.classList.add('active');
+    }
+  });
+}, {rootMargin:'-20% 0px -70% 0px'});
+targets.forEach(t=>spyObserver.observe(t));
+
+// ---- Scroll-reveal for job cards ----
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, {threshold:0.15});
+document.querySelectorAll('.job').forEach(j=>revealObserver.observe(j));
+</script>
+
+</body>
+</html>

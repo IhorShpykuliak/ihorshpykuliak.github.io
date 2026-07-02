@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>POD Compliance — Northfield Trade Supplies (Demo)</title>
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #fff;
+        color: #1a1a1a;
+        padding: 20px
+    }
+
+    .demo-flag{
+        display:inline-block;background:#C97A2B;color:#fff;font-size:10.5px;
+        letter-spacing:0.06em;text-transform:uppercase;padding:5px 9px;border-radius:3px;
+        margin-bottom:14px;
+    }
+
+    .metric-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px
+    }
+
+    .metric-card {
+        background: #f5f5f3;
+        border-radius: 8px;
+        padding: 12px 14px;
+        text-decoration: none;
+        display: block;
+        cursor: pointer;
+        transition: transform .1s;
+        border: none;
+        font: inherit;
+        text-align: left;
+        width: 100%;
+        color: inherit;
+    }
+
+    .metric-card:active {
+        transform: scale(0.97)
+    }
+
+    .metric-card:hover {
+        filter: brightness(.97)
+    }
+
+    .metric-label {
+        font-size: 11px;
+        color: #888;
+        text-transform: uppercase;
+        margin-bottom: 4px
+    }
+
+    .metric-value {
+        font-size: 22px;
+        font-weight: 500
+    }
+
+    .metric-sub {
+        font-size: 12px;
+        color: #888;
+        margin-top: 2px
+    }
+
+    .legend {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 12px;
+        font-size: 12px;
+        color: #666
+    }
+
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle
+    }
+
+    .chart-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 14px
+    }
+
+    .chart-title {
+        font-size: 15px;
+        font-weight: 500
+    }
+
+    .chart-sub {
+        font-size: 12px;
+        color: #888
+    }
+
+    .toast{
+        position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px);
+        background: #1a1a1a; color: #fff; font-size: 12.5px; padding: 10px 16px; border-radius: 6px;
+        opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+    }
+    .toast.show{ opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+
+<body>
+
+    <div class="demo-flag">Portfolio demo · Northfield Trade Supplies · synthetic data</div>
+
+    <div class="chart-header">
+        <span class="chart-title">POD compliance by order type</span>
+        <span class="chart-sub">Last 7 days · NORTH</span>
+    </div>
+
+    <div class="metric-grid" id="metricGrid"></div>
+
+    <div class="legend">
+        <span><span class="legend-dot" style="background:#2d9d6e"></span>With POD</span>
+        <span><span class="legend-dot" style="background:#e05252"></span>Without POD</span>
+    </div>
+
+    <div style="position:relative;width:100%;height:180px">
+        <canvas id="podChart" style="cursor: pointer; display: block; box-sizing: border-box; height: 180px; width: 100%;"></canvas>
+    </div>
+
+    <div class="toast" id="toast">Demo dashboard — drill-through links are disabled</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+    <script>
+        // ---- Synthetic dataset (fake branch, fake volumes) ----
+        var raw = [
+            {label:"Collect Now",   withPod:214, withoutPod:18,  withSignature:198, withPhoto:0,  withBoth:0,  withScanned:16},
+            {label:"Collect Later", withPod:39,  withoutPod:97,  withSignature:22,  withPhoto:0,  withBoth:0,  withScanned:17},
+            {label:"Delivered",     withPod:126, withoutPod:88,  withSignature:6,   withPhoto:61, withBoth:29, withScanned:30}
+        ];
+        var branchCode = "NORTH";
+
+        function pct(part, total) { return total === 0 ? 0 : Math.round((part / total) * 100); }
+
+        function showToast(){
+            var t = document.getElementById("toast");
+            t.classList.add("show");
+            clearTimeout(showToast._timer);
+            showToast._timer = setTimeout(function(){ t.classList.remove("show"); }, 1800);
+        }
+
+        var grid = document.getElementById("metricGrid");
+        raw.forEach(function (d, i) {
+            var total = d.withPod + d.withoutPod;
+            var p = pct(d.withPod, total);
+            var col = p >= 80 ? "#2d9d6e" : p >= 60 ? "#d4820d" : "#e05252";
+
+            var card = document.createElement("button");
+            card.className = "metric-card";
+            card.type = "button";
+            card.addEventListener("click", showToast);
+
+            card.innerHTML = `<div class="metric-label">${d.label}</div>
+                                <div class="metric-value" style="color:${col}">${p}%</div>
+                                <div class="metric-sub">${d.withPod} of ${total} orders with POD</div>`;
+            grid.appendChild(card);
+        });
+
+        Chart.register(ChartDataLabels);
+
+        new Chart(document.getElementById("podChart"), {
+            type: "bar",
+            data: {
+                labels: raw.map(r => r.label),
+                datasets: [
+                    {
+                        label: "With POD",
+                        data: raw.map(r => r.withPod),
+                        backgroundColor: "#2d9d6e",
+                        borderRadius: 4,
+                        borderSkipped: false
+                    },
+                    {
+                        label: "Without POD",
+                        data: raw.map(r => r.withoutPod),
+                        backgroundColor: "#e05252",
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }
+                ]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+
+                onClick: function (e, elements) {
+                    if (elements && elements.length > 0) {
+                        showToast();
+                    }
+                },
+
+                scales: {
+                    x: { stacked: true, grid: { color: "rgba(0,0,0,0.06)" }, border: { display: false }, ticks: { font: { size: 11 }, color: "#999" } },
+                    y: { stacked: true, grid: { display: false }, border: { display: false }, ticks: { font: { size: 12, weight: "500" }, color: "#555", padding: 8 } }
+                },
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        anchor: "center",
+                        align: "center",
+                        color: "#fff",
+                        font: { size: 11, weight: "500" },
+                        display: ctx => {
+                            var d = raw[ctx.dataIndex];
+                            var total = d.withPod + d.withoutPod;
+                            return total > 0 && (ctx.dataset.data[ctx.dataIndex] / total) > 0.25;
+                        },
+                        formatter: (val, ctx) => {
+                            var d = raw[ctx.dataIndex];
+                            var total = d.withPod + d.withoutPod;
+                            return val + " (" + pct(val, total) + "%)";
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(0,0,0,0.92)",
+                        titleFont: { size: 13 },
+                        bodyFont: { size: 12 },
+                        callbacks: {
+                            label: function (ctx) {
+                                var d = raw[ctx.dataIndex];
+                                var total = d.withPod + d.withoutPod;
+                                var perc = pct(ctx.raw, total);
+
+                                if (ctx.dataset.label === "With POD") {
+                                    return [
+                                        "With POD: " + ctx.raw + " (" + perc + "%)",
+                                        "   • Signature Only    : " + d.withSignature,
+                                        "   • Photo Only        : " + d.withPhoto,
+                                        "   • Photo & Signature : " + d.withBoth,
+                                        "   • Scanned Del Note  : " + d.withScanned
+                                    ];
+                                } else {
+                                    return "Without POD: " + ctx.raw + " (" + perc + "%)";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
