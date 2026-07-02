@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<title>YTD Customer Sales Comparison — Northfield Trade Supplies (Demo)</title>
+<style>
+.rps_ecfa > div
+	{font-family:Arial,Helvetica,sans-serif;
+	font-size:13px;
+	color:#333}
+.rps_ecfa h1
+	{color:#1a3c6d;
+	margin-bottom:12px}
+.rps_ecfa table
+	{border-collapse:collapse;
+	width:100%;
+	margin-bottom:24px}
+.rps_ecfa th, .rps_ecfa td
+	{border:1px solid #ddd;
+	padding:8px 10px;
+	text-align:right;
+	font-size:12px}
+.rps_ecfa th
+	{background:#f5f7fa;
+	font-weight:bold}
+.rps_ecfa .x_left
+	{text-align:left}
+.rps_ecfa .x_positive
+	{color:#006400}
+.rps_ecfa .x_negative
+	{color:#c00000}
+.rps_ecfa .x_customer-total
+	{background-color:#fff8e1;
+	font-weight:bold}
+.rps_ecfa .x_branch-detail
+	{background-color:#f9f9f9;
+	font-size:12px}
+.rps_ecfa .x_branch-detail td:first-child
+	{color:#555;
+	padding-left:32px}
+.rps_ecfa hr
+	{border:0;
+	border-top:1px solid #eee;
+	margin:20px 0}
+.demo-flag{
+    display:inline-block;background:#C97A2B;color:#fff;font-size:10.5px;
+    letter-spacing:0.06em;text-transform:uppercase;padding:5px 9px;border-radius:3px;
+    margin-bottom:14px;font-family:Arial,Helvetica,sans-serif;
+}
+body{margin:0;padding:20px;background:#fff;}
+</style>
+</head>
+<body>
+
+<div class="demo-flag">Portfolio demo · Northfield Trade Supplies · synthetic data</div>
+
+<div class="rps_ecfa"><div>
+<h1>YTD Customer Sales Comparison — as of 03/07/2026</h1>
+<p><em>Sorted by sales this year (TOP 12 Customers — sample)</em></p>
+<hr>
+<table>
+<tbody>
+<tr><th class="x_left">Customer Name</th><th>Code / Branch</th><th>This Year</th><th>Last Year</th><th>Variance</th><th>Variance %</th></tr>
+
+<tr class="x_customer-total"><td class="x_left">HARTLOW CONSTRUCTION LTD</td><td>HAR020</td><td>£542,310</td><td>£618,940</td><td class="x_negative">£-76,630</td><td class="x_negative">-12.4%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Elderfield</td><td></td><td>£128,450</td><td>£101,220</td><td class="x_positive">£27,230</td><td>26.9%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Marlow Cross</td><td></td><td>£9,840</td><td>£3,110</td><td class="x_positive">£6,730</td><td>216.4%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Northgate</td><td></td><td>£241,320</td><td>£356,900</td><td class="x_negative">£-115,580</td><td>-32.4%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Thornbury</td><td></td><td>£11,200</td><td>£16,340</td><td class="x_negative">£-5,140</td><td>-31.5%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Bridgewell</td><td></td><td>£151,500</td><td>£141,370</td><td class="x_positive">£10,130</td><td>7.2%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">M. OKAFOR BUILDING LTD</td><td>OKA010</td><td>£398,760</td><td>£312,440</td><td class="x_positive">£86,320</td><td class="x_positive">27.6%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Northgate</td><td></td><td>£95,600</td><td>£38,210</td><td class="x_positive">£57,390</td><td>150.2%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Ravenscroft</td><td></td><td>£81,400</td><td>£29,850</td><td class="x_positive">£51,550</td><td>172.7%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Colbridge</td><td></td><td>£16,900</td><td>£1,650</td><td class="x_positive">£15,250</td><td>924.2%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Wrenfield</td><td></td><td>£33,600</td><td>£36,110</td><td class="x_negative">£-2,510</td><td>-6.9%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Fenwick</td><td></td><td>£14,300</td><td>£20,900</td><td class="x_negative">£-6,600</td><td>-31.6%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Hartlow</td><td></td><td>£156,960</td><td>£185,720</td><td class="x_negative">£-28,760</td><td>-15.5%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">FENWICK CIVIL ENGINEERING LTD</td><td>FEN065</td><td>£286,120</td><td>£410,530</td><td class="x_negative">£-124,410</td><td class="x_negative">-30.3%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Colbridge</td><td></td><td>£12,800</td><td>£8,340</td><td class="x_positive">£4,460</td><td>53.5%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Ravenscroft</td><td></td><td>£3,900</td><td>£6,400</td><td class="x_negative">£-2,500</td><td>-39.1%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Wrenfield</td><td></td><td>£4,020</td><td>£7,850</td><td class="x_negative">£-3,830</td><td>-48.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Northgate</td><td></td><td>£265,400</td><td>£387,940</td><td class="x_negative">£-122,540</td><td>-31.6%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">S &amp; D DRYLINING LTD</td><td>SDD010</td><td>£201,880</td><td>£268,410</td><td class="x_negative">£-66,530</td><td class="x_negative">-24.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Bridgewell</td><td></td><td>£48,900</td><td>£29,140</td><td class="x_positive">£19,760</td><td>67.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Elderfield</td><td></td><td>£112,300</td><td>£101,720</td><td class="x_positive">£10,580</td><td>10.4%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Thornbury</td><td></td><td>£9,200</td><td>£34,300</td><td class="x_negative">£-25,100</td><td>-73.2%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Northgate</td><td></td><td>£31,480</td><td>£103,250</td><td class="x_negative">£-71,770</td><td>-69.5%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">STOCK TRANSFER ONLY - To Meadowview</td><td>MDW180</td><td>£128,940</td><td>£0</td><td class="x_positive">£128,940</td><td class="x_positive">100.0%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Silverdale</td><td></td><td>£128,940</td><td>£0</td><td class="x_positive">£128,940</td><td>-</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">A. NDIAYE PLASTERING &amp; DRYLINING LTD</td><td>AND020</td><td>£119,320</td><td>£141,880</td><td class="x_negative">£-22,560</td><td class="x_negative">-15.9%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Milbrook</td><td></td><td>£410</td><td>£620</td><td class="x_negative">£-210</td><td>-33.9%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Northgate</td><td></td><td>£980</td><td>£1,900</td><td class="x_negative">£-920</td><td>-48.4%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Colbridge</td><td></td><td>£117,930</td><td>£139,360</td><td class="x_negative">£-21,430</td><td>-15.4%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">brightwaysupplies.example</td><td>BW.EXAMPLE</td><td>£112,660</td><td>£0</td><td class="x_positive">£112,660</td><td class="x_positive">100.0%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Silverdale</td><td></td><td>£112,660</td><td>£0</td><td class="x_positive">£112,660</td><td>-</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">C. RAVELLO LIMITED</td><td>CRA771</td><td>£98,410</td><td>£620</td><td class="x_positive">£97,790</td><td class="x_positive">15,772.6%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Northgate</td><td></td><td>£88,900</td><td>£480</td><td class="x_positive">£88,420</td><td>18,420.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Marlow Cross</td><td></td><td>£9,510</td><td>£140</td><td class="x_positive">£9,370</td><td>6,692.9%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">ELDERFIELD TARMACADAM LIMITED</td><td>ELD001</td><td>£95,240</td><td>£96,680</td><td class="x_negative">£-1,440</td><td class="x_negative">-1.5%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Thornbury</td><td></td><td>£3,120</td><td>£1,760</td><td class="x_positive">£1,360</td><td>77.3%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Colbridge</td><td></td><td>£4,340</td><td>£3,180</td><td class="x_positive">£1,160</td><td>36.5%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Elderfield</td><td></td><td>£60,180</td><td>£67,400</td><td class="x_negative">£-7,220</td><td>-10.7%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Wrenfield</td><td></td><td>£27,600</td><td>£24,340</td><td class="x_positive">£3,260</td><td>13.4%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">K. VOSS CIVILS LTD</td><td>KVO001</td><td>£88,760</td><td>£128,340</td><td class="x_negative">£-39,580</td><td class="x_negative">-30.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Fenwick</td><td></td><td>£4,900</td><td>£9,120</td><td class="x_negative">£-4,220</td><td>-46.3%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Uppercombe</td><td></td><td>£83,860</td><td>£119,220</td><td class="x_negative">£-35,360</td><td>-29.7%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">DRAYMOOR HOMES LTD</td><td>DRA160</td><td>£86,110</td><td>£69,840</td><td class="x_positive">£16,270</td><td class="x_positive">23.3%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Northgate</td><td></td><td>£85,400</td><td>£65,610</td><td class="x_positive">£19,790</td><td>30.2%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#d32f2f; font-weight:bold">▼</span> Uppercombe</td><td></td><td>£710</td><td>£4,230</td><td class="x_negative">£-3,520</td><td>-83.2%</td></tr>
+<tr><td colspan="6" style="height:8px; border:none; background:transparent"></td></tr>
+
+<tr class="x_customer-total"><td class="x_left">GLINT &amp; COOPER LANDSCAPES LTD</td><td>GLI003</td><td>£79,420</td><td>£24,610</td><td class="x_positive">£54,810</td><td class="x_positive">222.7%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Colbridge</td><td></td><td>£71,300</td><td>£22,940</td><td class="x_positive">£48,360</td><td>210.8%</td></tr>
+<tr class="x_branch-detail"><td class="x_left"><span style="color:#2e7d32; font-weight:bold">▲</span> Marlow Cross</td><td></td><td>£8,120</td><td>£1,670</td><td class="x_positive">£6,450</td><td>386.2%</td></tr>
+</tbody>
+</table>
+<p style="font-size:11px; color:#666">Generated: 2026-06-12 06:06:20 · demo data</p>
+</div></div>
+
+</body>
+</html>
