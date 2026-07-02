@@ -54,6 +54,7 @@
   nav.sidenav a:hover{color:var(--heading);}
   nav.sidenav a.active{color:var(--heading);font-weight:700;border-left-color:#C97A2B;}
 
+  
   /* ---- Page ---- */
   .page{padding:36px 48px 60px;}
 
@@ -142,46 +143,6 @@
 
   footer.end{border-top:1px solid var(--heading);margin-top:36px;padding-top:14px;font-size:11px;color:var(--muted-soft);text-align:center;}
 
-  /* ---- Edit mode ---- */
-  [contenteditable="true"]{outline:none;}
-  body[data-editing="true"] [contenteditable="true"]{
-    cursor:text; border-radius:3px;
-  }
-  body[data-editing="true"] [contenteditable="true"]:hover{
-    outline:1px dashed #C97A2B; outline-offset:2px; background:rgba(201,122,43,0.06);
-  }
-  body[data-editing="true"] [contenteditable="true"]:focus{
-    outline:1.5px solid #C97A2B; background:rgba(201,122,43,0.08);
-  }
-
-  .edit-bar{
-    position:fixed; left:50%; bottom:20px; transform:translateX(-50%);
-    background:#1a1a1a; color:#fff; padding:10px 14px; border-radius:8px;
-    display:none; gap:8px; align-items:center; z-index:40; box-shadow:0 4px 18px rgba(0,0,0,0.25);
-    font-size:12px;
-  }
-  body[data-editing="true"] .edit-bar{display:flex;}
-  .edit-bar button{
-    background:#2a2a2a; border:1px solid #444; color:#fff; font-size:11.5px;
-    padding:7px 12px; border-radius:5px; cursor:pointer; font-family:inherit;
-  }
-  .edit-bar button:hover{background:#3a3a3a;}
-  .edit-bar button.primary{background:#C97A2B; border-color:#C97A2B;}
-  .edit-bar button.primary:hover{background:#b06a24;}
-  .edit-bar .edit-label{color:#aaa; padding-right:6px;}
-
-  .saved-banner{
-    display:none; background:#FFF4D6; color:#6a4c14; font-size:12px;
-    padding:8px 14px; text-align:center; align-items:center; justify-content:center; gap:10px;
-  }
-  .saved-banner.show{display:flex;}
-  .saved-banner button{
-    background:none; border:1px solid #6a4c14; color:#6a4c14; font-size:11px;
-    padding:3px 8px; border-radius:4px; cursor:pointer; font-family:inherit;
-  }
-
-  @media print{ .edit-bar, .saved-banner{display:none !important;} }
-
   /* ---- Print ---- */
   @media print{
     .toolbar, nav.sidenav, .progress-bar, .copy-btn{display:none !important;}
@@ -234,23 +195,17 @@
   }
 </style>
 </head>
-<body data-theme="light" data-editing="false">
+<body data-theme="light">
 
 <div class="progress-bar" id="progress-bar"></div>
 
 <div class="toolbar">
   <span class="name">IHOR SHPYKULIAK — CV</span>
   <div class="actions">
-    <button id="edit-toggle">🔒 Edit</button>
     <button id="theme-toggle">🌙 Dark mode</button>
     <button id="expand-all">Expand all roles</button>
     <button id="print-btn">Print / Save PDF</button>
   </div>
-</div>
-
-<div class="saved-banner" id="saved-banner">
-  Showing locally saved edits (visible only in this browser) &nbsp;
-  <button id="reset-edits">Reset to original</button>
 </div>
 
 <div class="layout">
@@ -281,10 +236,10 @@
 
         <h2 class="section" id="contact">Contact</h2>
         <ul class="contact-list">
-          <li><span class="editable-text">07384 757980</span><button class="copy-btn" data-copy="07384 757980">Copy</button></li>
-          <li><span class="editable-text">ihorshpykuliak@gmail.com</span><button class="copy-btn" data-copy="ihorshpykuliak@gmail.com">Copy</button></li>
-          <li><a href="#"><span class="editable-text">LinkedIn</span></a></li>
-          <li><span class="editable-text">Lichfield, UK</span></li>
+          <li><span>07384 757980</span><button class="copy-btn" data-copy="07384 757980">Copy</button></li>
+          <li><span>ihorshpykuliak@gmail.com</span><button class="copy-btn" data-copy="ihorshpykuliak@gmail.com">Copy</button></li>
+          <li><a href="https://www.linkedin.com/in/ihorshpykuliak/">LinkedIn</a></li>
+          <li>Lichfield, UK</li>
         </ul>
 
         <hr class="divider">
@@ -440,114 +395,7 @@
   </div>
 </div>
 
-<div class="edit-bar" id="edit-bar">
-  <span class="edit-label">Editing</span>
-  <button id="save-local">💾 Save (this browser)</button>
-  <button id="download-file" class="primary">⬇ Download updated CV file</button>
-  <button id="exit-edit">Exit editing</button>
-</div>
-
 <script>
-// =========================================================================
-// EDIT MODE
-// IMPORTANT: this is a static file with no server, so the passcode below
-// is only a soft deterrent (visible to anyone who views the page source),
-// not real security. To change it, edit the EDIT_PASSCODE value.
-// "Save (this browser)" only persists in this browser's localStorage.
-// "Download updated CV file" produces a new .html with your edits baked
-// in — push that file to the repo to make changes visible to everyone.
-// =========================================================================
-const EDIT_PASSCODE = 'ihor-cv-2026';
-const STORAGE_KEY = 'cv-local-edits-v1';
-
-const EDITABLE_SELECTOR = [
-  'header.intro h1',
-  'header.intro .role',
-  '.contact-list .editable-text',
-  '.left-col ul:not(.chip-list):not(.contact-list) li',
-  '.edu-title', '.edu-dates', '.edu-degree',
-  '.right-col .profile p',
-  '#achievements + ul li',
-  '.job-title', '.job-meta',
-  '.job-body li'
-].join(', ');
-
-function getEditableEls(){
-  return Array.from(document.querySelectorAll(EDITABLE_SELECTOR));
-}
-
-// ---- Restore any locally saved edits on load ----
-(function restoreEdits(){
-  let saved;
-  try{ saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); }catch(e){ saved = null; }
-  if(!saved || !Array.isArray(saved)) return;
-  const els = getEditableEls();
-  let applied = false;
-  els.forEach((el, i)=>{
-    if(typeof saved[i] === 'string' && saved[i] !== el.innerHTML){
-      el.innerHTML = saved[i];
-      applied = true;
-    }
-  });
-  if(applied) document.getElementById('saved-banner').classList.add('show');
-})();
-
-document.getElementById('reset-edits').addEventListener('click', ()=>{
-  if(confirm('Discard locally saved edits and reload the original CV?')){
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
-  }
-});
-
-// ---- Edit toggle (passcode-gated) ----
-const editToggle = document.getElementById('edit-toggle');
-editToggle.addEventListener('click', ()=>{
-  const entered = prompt('Enter the edit passcode:');
-  if(entered === null) return;
-  if(entered !== EDIT_PASSCODE){
-    alert('Incorrect passcode.');
-    return;
-  }
-  document.body.dataset.editing = 'true';
-  getEditableEls().forEach(el => el.setAttribute('contenteditable', 'true'));
-  editToggle.textContent = '🔓 Editing…';
-});
-
-document.getElementById('exit-edit').addEventListener('click', ()=>{
-  document.body.dataset.editing = 'false';
-  getEditableEls().forEach(el => el.removeAttribute('contenteditable'));
-  editToggle.textContent = '🔒 Edit';
-});
-
-// ---- Save to this browser only ----
-document.getElementById('save-local').addEventListener('click', ()=>{
-  const html = getEditableEls().map(el => el.innerHTML);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(html));
-  const btn = document.getElementById('save-local');
-  const original = btn.textContent;
-  btn.textContent = 'Saved ✓';
-  setTimeout(()=> btn.textContent = original, 1500);
-});
-
-// ---- Download a new HTML file with edits baked in ----
-document.getElementById('download-file').addEventListener('click', ()=>{
-  const clone = document.documentElement.cloneNode(true);
-  clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
-  clone.querySelector('body').dataset.editing = 'false';
-  const editBtn = clone.querySelector('#edit-toggle');
-  if(editBtn) editBtn.textContent = '🔒 Edit';
-  clone.querySelector('#saved-banner')?.classList.remove('show');
-
-  const htmlString = '<!DOCTYPE html>\n' + clone.outerHTML;
-  const blob = new Blob([htmlString], {type:'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'cv.html';
-  a.click();
-  URL.revokeObjectURL(url);
-});
-
 // ---- Theme toggle ----
 const themeBtn = document.getElementById('theme-toggle');
 themeBtn.addEventListener('click', ()=>{
