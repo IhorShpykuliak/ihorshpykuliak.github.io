@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Summary - Northfield</title>
+  <style>
+    :root {
+      --bg-main: #f4f6f9;
+      --card-bg: #ffffff;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --border-color: #e5e7eb;
+      --trend-up: #10b981;
+      --trend-up-bg: #ecfdf5;
+      --trend-down: #ef4444;
+      --trend-down-bg: #fef2f2;
+      --primary: #2563eb;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .email-container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      padding: 32px;
+      border: 1px solid var(--border-color);
+    }
+
+    /* Header */
+    .header-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .header-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-logo {
+      text-align: right;
+      vertical-align: middle;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 18px;
+      color: #1e3a8a;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 20px;
+      box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+    }
+
+    .header-divider {
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 20px 0 24px 0;
+    }
+
+    /* KPI Grids */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .kpi-card {
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .kpi-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-value-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .kpi-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .kpi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    .badge-up {
+      color: var(--trend-up);
+      background-color: var(--trend-up-bg);
+    }
+
+    .badge-down {
+      color: var(--trend-down);
+      background-color: var(--trend-down-bg);
+    }
+
+    .kpi-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Section Header */
+    .section-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+      margin: 32px 0 16px 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    /* Data Table */
+    .table-scroll {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    .data-table tr:hover {
+      background-color: #f9fafb;
+    }
+
+    .total-row {
+      font-weight: 700;
+      background-color: #f1f5f9 !important;
+    }
+
+    .total-row td {
+      border-top: 2px solid #cbd5e1;
+      border-bottom: 2px solid #cbd5e1;
+      color: #0f172a;
+    }
+
+    .text-right {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="email-container">
+    <!-- Header -->
+    <table class="header-table">
+      <tbody>
+        <tr>
+          <td class="header-title">
+            <h1>Sales Summary - Northfield</h1>
+            <div class="subtitle">Effective Month: October | Generated: 14 Oct 2026</div>
+          </td>
+          <td class="header-logo">
+            <div class="logo-badge">
+              <div class="logo-icon">N</div>
+              <span>NORTHFIELD</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="header-divider">
+
+    <!-- YTD KPI Section -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">YTD Performance (This Yr)</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value">£8,924,150</span>
+          <span class="kpi-badge badge-up">▲ 6.2%</span>
+        </div>
+        <div class="kpi-meta">Weekdays: <b>198</b> | Sats: <b>41</b> · vs Prior Yr</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">YTD Performance (Prior Yr)</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value">£8,403,110</span>
+        </div>
+        <div class="kpi-meta">Weekdays: <b>198</b> | Sats: <b>41</b></div>
+      </div>
+    </div>
+
+    <!-- MTD KPI Section -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">MTD (This Yr So Far)</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value">£612,480</span>
+          <span class="kpi-badge badge-down">▼ 2.1%</span>
+        </div>
+        <div class="kpi-meta">Weekdays: <b>10</b> | Sats: <b>2</b> · vs Prior Yr Same Point</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">MTD (Prior Yr Same Point)</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value">£625,600</span>
+        </div>
+        <div class="kpi-meta">Weekdays: <b>10</b> | Sats: <b>2</b></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-title">MTD (Prior Yr Full Month)</div>
+        <div class="kpi-value-row">
+          <span class="kpi-value">£1,340,900</span>
+        </div>
+        <div class="kpi-meta">Weekdays: <b>22</b> | Sats: <b>4</b></div>
+      </div>
+    </div>
+
+    <!-- Departmental Breakdown -->
+    <div class="section-header">Departmental Breakdown</div>
+    
+    <div class="table-scroll">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Branch</th>
+            <th>Description</th>
+            <th class="text-right">Sales CY</th>
+            <th class="text-right">Sales PY</th>
+            <th class="text-right">Sales Var %</th>
+            <th class="text-right">GP CY</th>
+            <th class="text-right">GP PY</th>
+            <th class="text-right">GP Var %</th>
+            <th class="text-right">GP % CY</th>
+            <th class="text-right">GP % PY</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Northfield</td>
+            <td>BM Collected</td>
+            <td class="text-right">215,400</td>
+            <td class="text-right">198,200</td>
+            <td class="text-right">8.7%</td>
+            <td class="text-right">62,466</td>
+            <td class="text-right">55,496</td>
+            <td class="text-right">12.6%</td>
+            <td class="text-right">29.0%</td>
+            <td class="text-right">28.0%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>BM Delivered</td>
+            <td class="text-right">284,150</td>
+            <td class="text-right">310,000</td>
+            <td class="text-right">-8.3%</td>
+            <td class="text-right">59,671</td>
+            <td class="text-right">63,550</td>
+            <td class="text-right">-6.1%</td>
+            <td class="text-right">21.0%</td>
+            <td class="text-right">20.5%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>Delivery Charge</td>
+            <td class="text-right">4,120</td>
+            <td class="text-right">3,850</td>
+            <td class="text-right">7.0%</td>
+            <td class="text-right">4,120</td>
+            <td class="text-right">3,850</td>
+            <td class="text-right">7.0%</td>
+            <td class="text-right">100.0%</td>
+            <td class="text-right">100.0%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>Plumbing & Heating</td>
+            <td class="text-right">42,800</td>
+            <td class="text-right">48,500</td>
+            <td class="text-right">-11.8%</td>
+            <td class="text-right">11,128</td>
+            <td class="text-right">10,670</td>
+            <td class="text-right">4.3%</td>
+            <td class="text-right">26.0%</td>
+            <td class="text-right">22.0%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>Restocking Charge</td>
+            <td class="text-right">810</td>
+            <td class="text-right">450</td>
+            <td class="text-right">80.0%</td>
+            <td class="text-right">810</td>
+            <td class="text-right">450</td>
+            <td class="text-right">80.0%</td>
+            <td class="text-right">100.0%</td>
+            <td class="text-right">100.0%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>SERVICES</td>
+            <td class="text-right">200</td>
+            <td class="text-right">0</td>
+            <td class="text-right">100.0%</td>
+            <td class="text-right">200</td>
+            <td class="text-right">0</td>
+            <td class="text-right">100.0%</td>
+            <td class="text-right">100.0%</td>
+            <td class="text-right">0.0%</td>
+          </tr>
+          <tr>
+            <td>Northfield</td>
+            <td>Showroom</td>
+            <td class="text-right">65,000</td>
+            <td class="text-right">64,600</td>
+            <td class="text-right">0.6%</td>
+            <td class="text-right">20,150</td>
+            <td class="text-right">20,026</td>
+            <td class="text-right">0.6%</td>
+            <td class="text-right">31.0%</td>
+            <td class="text-right">31.0%</td>
+          </tr>
+          <tr class="total-row">
+            <td>Northfield</td>
+            <td>Total</td>
+            <td class="text-right">612,480</td>
+            <td class="text-right">625,600</td>
+            <td class="text-right">-2.1%</td>
+            <td class="text-right">158,545</td>
+            <td class="text-right">154,042</td>
+            <td class="text-right">2.9%</td>
+            <td class="text-right">25.9%</td>
+            <td class="text-right">24.6%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</body>
+</html>
