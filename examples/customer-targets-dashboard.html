@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Customer Targets — YTD</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --panel: #ffffff;
+    --panel-2: #f8fafc;
+    --line: #e2e8f0;
+    --text: #0f172a;
+    --muted: #64748b;
+    --mint: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --mono: Consolas, "Courier New", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--sans); -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:1480px; margin:0 auto; padding:28px 24px 80px;}
+
+  header.top{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:22px;
+    flex-wrap:wrap; gap:16px;
+  }
+  .brand-eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--muted); margin-bottom:6px;
+  }
+  h1{margin:0; font-size:26px; font-weight:650; letter-spacing:-0.01em;}
+  .sub{color:var(--muted); font-size:13px; margin-top:4px;}
+
+  .controls{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  select, input[type=text], input[type=search]{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--text);
+    border-radius:8px; padding:8px 10px; font-family:var(--sans); font-size:13px;
+  }
+
+  .kpis{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
+  }
+  .kpi{
+    background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .kpi .label{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-family:var(--mono);}
+  .kpi .value{font-family:var(--mono); font-size:26px; margin-top:8px; font-variant-numeric:tabular-nums;}
+  .kpi .delta{font-size:12px; margin-top:4px; color:var(--muted);}
+  .kpi .delta.good{color:var(--mint); font-weight:600;}
+  .kpi .delta.bad{color:var(--red); font-weight:600;}
+
+  .grid-layout{display:flex; flex-direction:column; gap:16px;}
+  @media (max-width: 980px){ .kpis{grid-template-columns:repeat(2,1fr);} }
+
+  .tabs{display:flex; gap:8px; margin-bottom:18px;}
+  .tab-btn{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--muted);
+    border-radius:8px; padding:8px 14px; font-family:var(--sans); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all .1s;
+  }
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{background:var(--text); color:#ffffff; border-color:var(--text);}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);}
+  .panel-head{
+    padding:14px 18px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  .panel-head h2{font-size:14px; margin:0; font-weight:600;}
+  .panel-head .hint{font-size:11px; color:var(--muted); font-family:var(--mono);}
+
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  thead th{
+    position:sticky; top:0; background:var(--panel-2);
+    text-align:left; padding:10px 12px; font-family:var(--mono); font-weight:600;
+    color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+    cursor:pointer; user-select:none; border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  thead th:hover{color:var(--text);}
+  thead th.active{color:var(--mint);}
+  thead th.no-sort{cursor:default;}
+  thead th.no-sort:hover{color:var(--muted);}
+  tbody td{padding:9px 12px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums; white-space:nowrap;}
+  tbody tr{cursor:pointer; transition:background .1s;}
+  tbody tr:hover{background:#f1f5f9;}
+  #unassignedTbody tr{cursor:default;}
+  .num-mono{font-family:var(--mono);}
+  .name-cell{font-weight:600;}
+  .sub-cell{color:var(--muted); font-size:11px;}
+
+  .pct-pill{
+    display:inline-block; padding:2px 8px; border-radius:999px; font-family:var(--mono); font-size:11px; font-weight:600;
+  }
+  .pct-good{background:#d1fae5; color:#065f46;}
+  .pct-warn{background:#fef3c7; color:#92400e;}
+  .pct-bad{background:#fee2e2; color:#991b1b;}
+
+  .table-scroll{max-height:560px; overflow:auto;}
+
+  .notes-icon-btn{
+    display:inline-flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer;
+    color:var(--muted); padding:4px 6px; border-radius:6px; font-family:var(--mono); font-size:11px;
+  }
+  .notes-icon-btn:hover{color:var(--text); background:var(--panel-2);}
+
+  .modal-overlay{
+    display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%;
+    background:rgba(15, 23, 42, 0.4); backdrop-filter:blur(3px);
+    justify-content:center; align-items:center;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:#ffffff; border-radius:12px; width:90%; max-width:540px; padding:24px;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+    animation: slideDown 0.2s ease-out; position:relative;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:16px; font-size:22px; cursor:pointer; color:var(--muted); border:none; background:none; line-height:1;
+    z-index:1;
+  }
+  .modal-close:hover{color:var(--text);}
+
+  .ring-wrap{display:flex; align-items:center; gap:18px; margin-bottom:16px; margin-top:8px;}
+  .ring-figures{flex:1;}
+  .ring-figures .name{font-weight:700; font-size:18px; color:var(--text);}
+  .ring-figures .meta{color:var(--muted); font-size:12px; margin-top:2px;}
+  .ring-figures .attain{font-family:var(--mono); font-size:24px; margin-top:8px; font-weight:600;}
+
+  .bars{margin-top:14px;}
+  .bar-row{margin-bottom:12px;}
+  .bar-row .bl{display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:5px; font-family:var(--mono);}
+  .bar-track{height:8px; background:#e2e8f0; border-radius:5px; overflow:hidden;}
+  .bar-fill{height:100%; border-radius:5px;}
+
+  .reassign-box{
+    margin-top:20px; padding-top:16px; border-top:1px solid var(--line);
+  }
+  .reassign-title{font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-bottom:8px; font-family:var(--mono);}
+  .reassign-controls{display:flex; gap:8px; flex-wrap:wrap;}
+  .reassign-controls input{flex:1; min-width:140px;}
+  .btn-apply{
+    background:var(--text); color:#ffffff; border:none; border-radius:8px; padding:8px 16px;
+    font-size:13px; font-weight:600; cursor:pointer; transition:opacity .1s;
+  }
+  .btn-apply:hover{opacity:0.9;}
+  .btn-apply:disabled{opacity:0.5; cursor:default;}
+  .btn-reset{
+    background:#64748b; color:#ffffff; border:none; border-radius:8px; padding:8px 16px;
+    font-size:13px; font-weight:600; cursor:pointer; transition:opacity .1s;
+  }
+  .btn-reset:hover{opacity:0.9;}
+  .btn-reset:disabled{opacity:0.5; cursor:default;}
+
+  .empty-state{padding:40px 18px; text-align:center; color:var(--muted); font-size:13px;}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--text); color:#fff; padding:10px 18px; border-radius:8px; font-size:13px;
+    font-family:var(--sans); opacity:0; pointer-events:none; transition:all .2s ease-out; z-index:10000;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @keyframes slideDown { from { transform: translateY(-15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="brand-eyebrow">YTD · Sales Metrics</div>
+      <h1>Customer Targets</h1>
+      <div class="sub">Demo dashboard — sample data only, for portfolio purposes.</div>
+    </div>
+    <div class="controls" id="assignedControls">
+      <select id="branchFilter"></select>
+      <select id="repFilter"></select>
+      <input type="text" id="search" placeholder="Search customer…" />
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="assigned">Customer Targets</button>
+    <button class="tab-btn" data-tab="unassigned">Unassigned Customers</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-assigned">
+    <section class="kpis" id="kpis"></section>
+
+    <section class="grid-layout">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Customers — YTD plan vs actual</h2>
+          <div class="hint" id="rowCount"></div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th data-key="CustomerName">Customer</th>
+                <th data-key="Branch">Branch</th>
+                <th data-key="YTDSale" class="num-mono">YTD actual</th>
+                <th data-key="YTDSaleTarget" class="num-mono">YTD target</th>
+                <th data-key="LastYrYTDSales" class="num-mono">YTD last Yr</th>
+                <th data-key="pct" class="num-mono">% of target</th>
+                <th data-key="gap" class="num-mono">Annual Target Gap</th>
+                <th data-key="YTDMargin" class="num-mono">YTD margin</th>
+                <th data-key="YrMarginTarget" class="num-mono">Margin target</th>
+                <th data-key="LastYrYTDMargin" class="num-mono">Last YTD margin</th>
+                <th class="no-sort">Notes</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="tab-panel" id="panel-unassigned">
+    <section class="grid-layout">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Customers without a Sales Rep</h2>
+          <div class="hint" id="unassignedCount"></div>
+          <input type="search" id="unassignedSearch" placeholder="Search customer…" style="min-width:220px;" />
+        </div>
+        <div class="hint" style="padding:0 18px 12px; color:var(--muted);" id="unassignedIntro"></div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th class="no-sort">Customer</th>
+                <th class="no-sort">Branch</th>
+                <th class="no-sort">Assign Sales Rep</th>
+              </tr>
+            </thead>
+            <tbody id="unassignedTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<!-- POPUP MODAL: CUSTOMER DETAIL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- GLOBAL REPS DATALIST -->
+<datalist id="allRepsList"></datalist>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---------------------------------------------------------------------------
+// SAMPLE DATA — this is a portfolio demo, so all figures below are invented
+// and stand in for what the real dashboard would receive as JSON from the
+// stored procedure (customers, branches, reps, targets).
+// ---------------------------------------------------------------------------
+
+const BRANCHES = ["North", "Midlands", "South East", "South West"];
+const REP_CODES = ["JS1", "MK2", "AL3", "TB4", "RH5", "CN6"];
+
+let ALL_REPS = REP_CODES.map((code, i) => ({ id: i + 1, code }));
+// placeholder rep "00" represents "unassigned"
+ALL_REPS.push({ id: 0, code: "00" });
+
+const CUSTOMER_NAMES = [
+  "Harrogate Steel Fabrication", "Beacon Freight Solutions", "Willowmere Foods Ltd",
+  "Kestrel Print & Packaging", "Northgate Timber Merchants", "Pemberton Electrical",
+  "Silverline Logistics", "Ashcroft Engineering", "Meridian Plastics Group",
+  "Oakwell Building Supplies", "Furlong Agricultural Co", "Radcliffe Motor Parts",
+  "Copperfield Hospitality", "Vantage Water Systems", "Brightside Textiles",
+  "Ironbridge Fasteners", "Larkspur Horticulture", "Thistledown Care Homes",
+  "Glenmorven Distillers", "Hallmark Office Interiors", "Cobalt Precision Tooling",
+  "Redwing Waste Management", "Pinnacle Scaffolding", "Sabre Fleet Rentals",
+  "Duncombe Dairy Co-operative"
+];
+
+function seededRand(seed){
+  let s = seed;
+  return () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+}
+
+const DATA = CUSTOMER_NAMES.map((name, i) => {
+  const rnd = seededRand(i * 37 + 11);
+  const branch = BRANCHES[Math.floor(rnd() * BRANCHES.length)];
+  const rep = ALL_REPS[Math.floor(rnd() * (ALL_REPS.length - 1))]; // exclude "00" here
+  const yrSalesTarget = Math.round((40000 + rnd() * 260000) / 500) * 500;
+  const attainmentFactor = 0.55 + rnd() * 0.7; // spread of over/under performers
+  const ytdSaleTarget = Math.round(yrSalesTarget * (0.6 + rnd() * 0.15));
+  const ytdSale = Math.round(ytdSaleTarget * attainmentFactor);
+  const lastYrYTDSales = Math.round(ytdSaleTarget * (0.7 + rnd() * 0.5));
+  const lastYrSales = Math.round(yrSalesTarget * (0.75 + rnd() * 0.4));
+  const yrMarginTarget = +(18 + rnd() * 14).toFixed(1);
+  const ytdMargin = +(yrMarginTarget + (rnd() * 8 - 4)).toFixed(1);
+  const lastYrYTDMargin = +(yrMarginTarget + (rnd() * 6 - 3)).toFixed(1);
+  const lastYrMargin = +(yrMarginTarget + (rnd() * 6 - 3)).toFixed(1);
+
+  return {
+    CustomerID: i + 1,
+    CustomerName: name,
+    Branch: branch,
+    SalesRepID: rep.id,
+    SalesRep: rep.code,
+    LastYrSales: lastYrSales,
+    YrSalesTarget: yrSalesTarget,
+    LastYrYTDSales: lastYrYTDSales,
+    YTDSaleTarget: ytdSaleTarget,
+    YTDSale: ytdSale,
+    LastYrMargin: lastYrMargin,
+    LastYrYTDMargin: lastYrYTDMargin,
+    YrMarginTarget: yrMarginTarget,
+    YTDMargin: ytdMargin
+  };
+});
+
+const UNASSIGNED_NAMES = [
+  "Elmswood Joinery", "Farrant Signage Co", "Gullane Marine Supplies",
+  "Hartley Vending Services", "Ivybridge Landscaping", "Juniper Data Cabling",
+  "Knowlton Refrigeration", "Lomax Industrial Coatings"
+];
+// UNASSIGNED items are arrays: [CustomerID, CustomerCode, CustomerName, Branch]
+let UNASSIGNED = UNASSIGNED_NAMES.map((name, i) => [
+  900 + i,
+  "U" + (100 + i),
+  name,
+  BRANCHES[i % BRANCHES.length]
+]);
+
+// This is a portfolio build with edit rights enabled so the reassignment flow can be demoed.
+let ALLOW_EDIT = 1;
+let UNASSIGNED_REP_ID = 0; // "00" placeholder rep id
+
+let sortKey = "gap", sortDir = -1;
+let currentEditingCustId = null;
+
+const fmt = n => Math.round(n).toLocaleString("en-GB");
+const pctOf = r => r.YTDSaleTarget ? (r.YTDSale / r.YTDSaleTarget * 100) : 0;
+const gapOf = r => Math.max(r.YrSalesTarget - r.YTDSale, 0);
+
+function pctClass(p){
+  if (p >= 95) return "pct-good";
+  if (p >= 75) return "pct-warn";
+  return "pct-bad";
+}
+function barColor(p){
+  if (p >= 95) return "var(--mint)";
+  if (p >= 75) return "var(--amber)";
+  return "var(--red)";
+}
+function yoyColor(p){
+  if (p >= 100) return "var(--mint)";
+  if (p >= 85) return "var(--amber)";
+  return "var(--red)";
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove("show"), 2200);
+}
+
+function populateBranchFilter(){
+  const bSel = document.getElementById("branchFilter");
+  const branches = [...new Set(DATA.map(d=>d.Branch))].sort();
+  bSel.innerHTML = "<option value=\"\">All branches</option>" + branches.map(b=>`<option value="${b}">${b}</option>`).join("");
+}
+
+function updateRepFilter(){
+  const bSel = document.getElementById("branchFilter").value;
+  const rSel = document.getElementById("repFilter");
+  const currentRep = rSel.value;
+
+  const availableReps = [...new Set(
+    DATA.filter(d => !bSel || d.Branch === bSel).map(d => d.SalesRep)
+  )].sort();
+
+  rSel.innerHTML = "<option value=\"\">All reps</option>" + availableReps.map(r=>`<option value="${r}">${r}</option>`).join("");
+
+  if (availableReps.includes(currentRep)) {
+    rSel.value = currentRep;
+  } else {
+    rSel.value = "";
+  }
+}
+
+function populateAllRepsDatalist(){
+  document.getElementById("allRepsList").innerHTML = ALL_REPS.filter(r => r.code !== "00").map(r => `<option value="${r.code}"></option>`).join("");
+}
+
+function filteredSorted(){
+  const b = document.getElementById("branchFilter").value;
+  const r = document.getElementById("repFilter").value;
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  let rows = DATA.filter(d =>
+    (!b || d.Branch===b) &&
+    (!r || d.SalesRep===r) &&
+    (!q || d.CustomerName.toLowerCase().includes(q))
+  );
+  rows = rows.map(d => ({...d, pct: pctOf(d), gap: gapOf(d)}));
+  rows.sort((a,b2)=>{
+    let av=a[sortKey], bv=b2[sortKey];
+    if (typeof av === "string") return sortDir * av.localeCompare(bv);
+    return sortDir * (av - bv);
+  });
+  return rows;
+}
+
+function renderKPIs(rows){
+  const totalYTD = rows.reduce((s,r)=>s+r.YTDSale,0);
+  const totalTarget = rows.reduce((s,r)=>s+r.YTDSaleTarget,0);
+  const totalGap = rows.reduce((s,r)=>s+r.gap,0);
+  const avgMargin = rows.length ? rows.reduce((s,r)=>s+r.YTDMargin,0)/rows.length : 0;
+  const attain = totalTarget ? (totalYTD/totalTarget*100) : 0;
+
+  const kpis = [
+    {label:"YTD Actual Sales", value: "£"+fmt(totalYTD), delta:`of £${fmt(totalTarget)} target`, cls:""},
+    {label:"YTD Target Attainment", value: attain.toFixed(1)+"%", delta: attain>=95?"on plan":"below plan", cls: attain>=95?"good":"bad"},
+    {label:"Full-Year Sales Gap", value: "£"+fmt(totalGap), delta:`${rows.filter(r=>r.gap>0).length} customers with a gap`, cls:"bad"},
+    {label:"Average YTD margin", value: avgMargin.toFixed(1)+"%", delta:"across selected customers", cls:""},
+  ];
+  document.getElementById("kpis").innerHTML = kpis.map(k=>`
+    <div class="kpi">
+      <div class="label">${k.label}</div>
+      <div class="value">${k.value}</div>
+      <div class="delta ${k.cls}">${k.delta}</div>
+    </div>`).join("");
+}
+
+function notesIconHtml(customerId){
+  return `
+    <button class="notes-icon-btn" onclick="event.stopPropagation(); showToast('Would open notes for customer #${customerId}')" title="View notes">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+        <path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/>
+        <path d="M9 13h6"/><path d="M9 17h6"/>
+      </svg>
+    </button>`;
+}
+
+function renderTable(rows){
+  document.getElementById("rowCount").textContent = rows.length + " customers";
+  document.getElementById("tbody").innerHTML = rows.map((r)=>`
+    <tr data-id="${r.CustomerID}">
+      <td class="name-cell">${r.CustomerName}<div class="sub-cell">${r.SalesRep}</div></td>
+      <td>${r.Branch}</td>
+      <td class="num-mono">£${fmt(r.YTDSale)}</td>
+      <td class="num-mono">£${fmt(r.YTDSaleTarget)}</td>
+      <td class="num-mono">£${fmt(r.LastYrYTDSales)}</td>
+      <td><span class="pct-pill ${pctClass(r.pct)}">${r.pct.toFixed(0)}%</span></td>
+      <td class="num-mono" style="color:${r.gap>0?"#d97706":"var(--muted)"}">${r.gap>0?"£"+fmt(r.gap):"—"}</td>
+      <td class="num-mono">${r.YTDMargin.toFixed(1)}%</td>
+      <td class="num-mono">${r.YrMarginTarget.toFixed(1)}%</td>
+      <td class="num-mono">${r.LastYrYTDMargin.toFixed(1)}%</td>
+      <td>${notesIconHtml(r.CustomerID)}</td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll("#tbody tr").forEach(tr=>{
+    tr.addEventListener("click", ()=>{
+      const cid = parseInt(tr.dataset.id);
+      const custObj = DATA.find(d => d.CustomerID === cid);
+      openDetailModal(custObj);
+    });
+  });
+
+  document.querySelectorAll("#panel-assigned thead th[data-key]").forEach(th=>{
+    th.classList.toggle("active", th.dataset.key===sortKey);
+  });
+}
+
+function ringSVG(pct){
+  const clamped = Math.max(0, Math.min(pct, 130));
+  const r = 46, c = 2*Math.PI*r;
+  const frac = Math.min(clamped/100, 1);
+  const color = barColor(pct);
+  const over = pct > 100;
+  return `
+  <svg width="120" height="120" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+    <circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="10"
+      stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-frac)}"
+      transform="rotate(-90 60 60)"/>
+    <text x="60" y="56" text-anchor="middle" fill="${color}" font-family="var(--mono)" font-size="20" font-weight="600">${pct.toFixed(0)}%</text>
+    <text x="60" y="74" text-anchor="middle" fill="#64748b" font-family="var(--mono)" font-size="9">${over?"over target":"of target"}</text>
+  </svg>`;
+}
+
+function openDetailModal(r){
+  if (!r) return;
+  currentEditingCustId = r.CustomerID;
+  const pct = pctOf(r);
+  const marginDelta = r.YTDMargin - r.YrMarginTarget;
+
+  const yoyPct = r.LastYrYTDSales ? (r.YTDSale / r.LastYrYTDSales * 100) : (r.YTDSale > 0 ? 100 : 0);
+  const yoyChangePct = r.LastYrYTDSales ? ((r.YTDSale - r.LastYrYTDSales) / r.LastYrYTDSales * 100) : (r.YTDSale > 0 ? 100 : 0);
+  const yoyBarColor = yoyColor(yoyPct);
+  const yoyChangeLabel = (yoyChangePct >= 0 ? "+" : "") + yoyChangePct.toFixed(1) + "%";
+
+  let reassignHtml = "";
+  if (ALLOW_EDIT) {
+    reassignHtml = `
+      <div class="reassign-box">
+        <div class="reassign-title">Change Sales Rep</div>
+        <div class="reassign-controls">
+          <input type="search" id="newRepInput" list="allRepsList" placeholder="Search or select Sales Rep..." value="${r.SalesRep}">
+          <button class="btn-apply" onclick="applyNewSalesRep()">Apply</button>
+          <button class="btn-reset" onclick="resetSalesRep()">Delete SalesRep</button>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById("modalContent").innerHTML = `
+    <div class="ring-wrap">
+      ${ringSVG(pct)}
+      <div class="ring-figures">
+        <div class="name">${r.CustomerName}</div>
+        <div class="meta">${r.Branch} · <span id="modalCurrentRep">${r.SalesRep}</span></div>
+        <div class="attain">£${fmt(r.YTDSale)} <span style="color:var(--muted); font-size:14px;">/ £${fmt(r.YTDSaleTarget)}</span></div>
+        <button class="notes-icon-btn" style="margin-top:8px; padding:5px 10px; border:1px solid var(--line); border-radius:6px;" onclick="showToast('Would open customer #${r.CustomerID}')" title="More about customer">
+          More
+        </button>
+      </div>
+    </div>
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bl"><span>Annual target</span><span>£${fmt(r.YTDSale)} / £${fmt(r.YrSalesTarget)}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.min(r.YTDSale/r.YrSalesTarget*100,100)}%; background:${barColor(r.YTDSale/r.YrSalesTarget*100)}"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bl"><span>Last year YTD &rarr; YTD actual</span><span style="color:${yoyBarColor}">£${fmt(r.LastYrYTDSales)} &rarr; £${fmt(r.YTDSale)} (${yoyChangeLabel})</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.min(yoyPct,100)}%; background:${yoyBarColor}"></div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bl"><span>YTD margin vs target (${r.YTDMargin.toFixed(1)}% / ${r.YrMarginTarget.toFixed(1)}%)</span><span style="color:${marginDelta>=0?"var(--mint)":"var(--red)"}">${marginDelta>=0?"+":""}${marginDelta.toFixed(1)} pp</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.min(r.YTDMargin/(r.YrMarginTarget||1)*50,100)}%; background:${marginDelta>=0?"var(--mint)":"var(--red)"}"></div></div>
+      </div>
+    </div>
+    ${reassignHtml}
+  `;
+  document.getElementById("modalOverlay").classList.add("open");
+}
+
+function applyNewSalesRep(){
+  if (!ALLOW_EDIT) return;
+
+  const inputEl = document.getElementById("newRepInput");
+  if (!inputEl) return;
+  const newCode = inputEl.value.trim();
+
+  if (!newCode || currentEditingCustId === null) return;
+
+  const matchedRep = ALL_REPS.find(r => r.code.toLowerCase() === newCode.toLowerCase());
+  if (!matchedRep) {
+    alert("Selected Sales Rep code is not valid!");
+    return;
+  }
+
+  const targetCust = DATA.find(d => d.CustomerID === currentEditingCustId);
+  if (!targetCust) return;
+
+  const msg = `Change Sales Rep for "${targetCust.CustomerName}" from "${targetCust.SalesRep}" to "${matchedRep.code}"?`;
+  if (!confirm(msg)) return;
+
+  targetCust.SalesRepID = matchedRep.id;
+  targetCust.SalesRep = matchedRep.code;
+  showToast(`Sales Rep updated to "${matchedRep.code}"`);
+
+  updateRepFilter();
+  renderAll();
+  closeDetailModal();
+}
+
+function resetSalesRep(){
+  if (!ALLOW_EDIT) return;
+  if (currentEditingCustId === null) return;
+
+  const targetCust = DATA.find(d => d.CustomerID === currentEditingCustId);
+  if (!targetCust) return;
+
+  const msg = `Reset Sales Rep for "${targetCust.CustomerName}" to "00" (unassign)?\n\nCurrent: ${targetCust.SalesRep}`;
+  if (!confirm(msg)) return;
+
+  targetCust.SalesRepID = UNASSIGNED_REP_ID;
+  targetCust.SalesRep = "00";
+  showToast(`Sales Rep reset to "00" for "${targetCust.CustomerName}"`);
+
+  updateRepFilter();
+  renderAll();
+  closeDetailModal();
+}
+
+function closeDetailModal(){
+  document.getElementById("modalOverlay").classList.remove("open");
+  currentEditingCustId = null;
+}
+
+const UNASSIGNED_RENDER_LIMIT = 200;
+
+function renderUnassigned(){
+  const tbodyEl = document.getElementById("unassignedTbody");
+  if (!tbodyEl) return;
+
+  document.getElementById("unassignedIntro").textContent =
+    UNASSIGNED.length + " unassigned customers. Start typing above to search - the search covers all of them.";
+
+  const q = document.getElementById("unassignedSearch").value.trim().toLowerCase();
+
+  if (!q) {
+    document.getElementById("unassignedCount").textContent = UNASSIGNED.length + " customers total";
+    tbodyEl.innerHTML = `<tr><td colspan="3" class="empty-state">${UNASSIGNED.length} unassigned customers loaded. Start typing above to search.</td></tr>`;
+    return;
+  }
+
+  const matches = UNASSIGNED.filter(u =>
+    u[2].toLowerCase().includes(q) || u[1].toLowerCase().includes(q)
+  );
+  const rows = matches.slice(0, UNASSIGNED_RENDER_LIMIT);
+
+  document.getElementById("unassignedCount").textContent = matches.length > UNASSIGNED_RENDER_LIMIT
+    ? `${matches.length} matches (showing first ${UNASSIGNED_RENDER_LIMIT} — refine your search)`
+    : `${matches.length} match${matches.length===1?"":"es"}`;
+
+  if (!rows.length) {
+    tbodyEl.innerHTML = `<tr><td colspan="3" class="empty-state">No unassigned customers found.</td></tr>`;
+    return;
+  }
+
+  tbodyEl.innerHTML = rows.map(u => `
+    <tr data-id="${u[0]}">
+      <td class="name-cell">${u[2]}<div class="sub-cell">${u[1]}</div></td>
+      <td>${u[3]}</td>
+      <td>
+        <div class="reassign-controls">
+          <input type="search" class="unassign-input" list="allRepsList" placeholder="Search or select Sales Rep...">
+          <button class="btn-apply" onclick="applyUnassignedRep(${u[0]}, this)">Assign</button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function applyUnassignedRep(customerId, btn){
+  if (!ALLOW_EDIT) return;
+
+  const row = btn.closest("tr");
+  const inputEl = row ? row.querySelector(".unassign-input") : null;
+  if (!inputEl) return;
+
+  const newCode = inputEl.value.trim();
+  if (!newCode) return;
+
+  const matchedRep = ALL_REPS.find(r => r.code.toLowerCase() === newCode.toLowerCase());
+  if (!matchedRep) {
+    alert("Selected Sales Rep code is not valid!");
+    return;
+  }
+
+  const cust = UNASSIGNED.find(u => u[0] === customerId);
+  const custName = cust ? cust[2] : ("ID " + customerId);
+
+  const msg = `Assign Sales Rep "${matchedRep.code}" to customer "${custName}"?`;
+  if (!confirm(msg)) return;
+
+  btn.disabled = true;
+  showToast(`"${custName}" assigned to "${matchedRep.code}"`);
+
+  UNASSIGNED = UNASSIGNED.filter(u => u[0] !== customerId);
+  renderUnassigned();
+}
+
+function renderAll(){
+  const rows = filteredSorted();
+  renderKPIs(rows);
+  renderTable(rows);
+}
+
+document.querySelectorAll("#panel-assigned thead th[data-key]").forEach(th=>{
+  th.addEventListener("click", ()=>{
+    const key = th.dataset.key;
+    if (sortKey===key) sortDir *= -1; else { sortKey=key; sortDir = key==="CustomerName"?1:-1; }
+    renderAll();
+  });
+});
+
+document.getElementById("branchFilter").addEventListener("change", ()=>{
+  updateRepFilter();
+  renderAll();
+});
+
+document.getElementById("repFilter").addEventListener("change", ()=>{
+  renderAll();
+});
+
+document.getElementById("search").addEventListener("input", ()=>{
+  renderAll();
+});
+
+document.getElementById("unassignedSearch").addEventListener("input", renderUnassigned);
+
+document.querySelectorAll(".tab-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+    document.getElementById("panel-"+btn.dataset.tab).classList.add("active");
+    document.getElementById("assignedControls").style.display = (btn.dataset.tab === "assigned") ? "flex" : "none";
+  });
+});
+
+document.getElementById("modalClose").addEventListener("click", closeDetailModal);
+document.getElementById("modalOverlay").addEventListener("click", (e)=>{
+  if (e.target === document.getElementById("modalOverlay")) closeDetailModal();
+});
+
+populateBranchFilter();
+updateRepFilter();
+populateAllRepsDatalist();
+renderAll();
+renderUnassigned();
+</script>
+</body>
+</html>

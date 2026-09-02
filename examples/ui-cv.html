@@ -80,6 +80,7 @@
 
   ul{margin:0 0 4px;padding-left:18px;}
   li{margin-bottom:7px;font-size:13.5px;}
+  li strong{color:var(--heading);}
 
   .contact-list{list-style:none;padding:0;margin:0;}
   .contact-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;margin-bottom:10px;}
@@ -105,10 +106,10 @@
   li.hit{background:#fff4d6;border-radius:3px;padding:2px 4px;margin-left:-4px;color:#1a1a1a;}
   [data-theme="dark"] li.hit{background:#4a3a15;color:#f2e6c8;}
 
-  .edu-block{margin-bottom:4px;}
+  .edu-block{margin-bottom:14px;}
   .edu-title{font-weight:700;font-size:13.5px;}
   .edu-dates{font-size:12.5px;color:var(--muted);margin:2px 0 4px;}
-  .edu-degree{font-weight:600;font-size:13px;margin-bottom:10px;}
+  .edu-degree{font-weight:600;font-size:13px;margin-bottom:4px;}
 
   .profile p{font-size:13.5px;margin:0 0 12px;}
 
@@ -257,9 +258,9 @@
 
   <nav class="sidenav" id="sidenav">
     <a href="#contact" data-target="contact">Contact</a>
-    <a href="#core-skills" data-target="core-skills">Core Skills</a>
-    <a href="#technical-skills" data-target="technical-skills">Technical Skills</a>
+    <a href="#core-skills" data-target="core-skills">Skills</a>
     <a href="#education" data-target="education">Education</a>
+    <a href="#certifications" data-target="certifications">Certifications</a>
     <a href="#additional" data-target="additional">Additional Info</a>
     <a href="#profile" data-target="profile">Profile</a>
     <a href="#achievements" data-target="achievements">Achievements</a>
@@ -270,7 +271,7 @@
 
     <header class="intro">
       <h1>IHOR SHPYKULIAK</h1>
-      <div class="role">ANALYTICS ENGINEER | DATA ENGINEER | DATA QUALITY &amp; ERP SYSTEMS</div>
+      <div class="role">BUSINESS ANALYST | DATA ENGINEER | PROCESS AUTOMATION</div>
     </header>
     <hr class="top-rule">
 
@@ -289,55 +290,68 @@
 
         <hr class="divider">
 
-        <h2 class="section" id="core-skills">Core Skills</h2>
+        <h2 class="section" id="core-skills">Core &amp; Technical Skills</h2>
         <div class="skills-hint">Click a skill to highlight it in Work Experience →</div>
         <ul class="chip-list" id="chip-list">
-          <li class="chip" data-kw="data modelling">Data Modelling &amp; Transformation</li>
-          <li class="chip" data-kw="sql">SQL Development &amp; Optimisation (T-SQL)</li>
-          <li class="chip" data-kw="power bi">Power BI &amp; Data Visualisation</li>
-          <li class="chip" data-kw="dax">DAX &amp; Performance Optimisation</li>
-          <li class="chip" data-kw="api">Data Integration &amp; APIs</li>
-          <li class="chip" data-kw="python">Automation &amp; Data Processing (Python, Power Automate)</li>
-          <li class="chip" data-kw="sdlc">SDLC (Requirements, Testing &amp; Deployment)</li>
+          <li class="chip" data-kw="sql">SQL &amp; Database Engineering</li>
+          <li class="chip" data-kw="power bi">Power BI &amp; Reporting</li>
+          <li class="chip" data-kw="python">Python &amp; Scripting</li>
+          <li class="chip" data-kw="git">Git / GitHub</li>
+          <li class="chip" data-kw="api">REST APIs &amp; Integration</li>
+          <li class="chip" data-kw="etl">ETL / Imperfect Data</li>
+          <li class="chip" data-kw="stakeholder">Stakeholder Delivery</li>
         </ul>
 
-        <hr class="divider">
-
-        <h2 class="section" id="technical-skills">Technical Skills</h2>
         <ul>
-          <li><strong>Data &amp; Analytics:</strong> SQL (T-SQL), Power BI, DAX, Data Modelling</li>
-          <li><strong>Automation &amp; Processing:</strong> Python, Power Automate, HTML, CSS</li>
+          <li><strong>SQL &amp; Database Engineering:</strong> Advanced SQL (T-SQL, Stored Procedures, Views, Query Optimisation), Data Modelling (Star Schema, Fact &amp; Dimension tables, Hierarchies), SSMS, VS Code</li>
+          <li><strong>Reporting &amp; Visualisation:</strong> Power BI (Data Modelling, DAX, Power Query, Visuals, Workspace Management), Interactive Dashboard Design, QlikView scripting concepts</li>
+          <li><strong>Scripting &amp; Web Technologies:</strong> Python (pandas, requests, pdfkit, ftplib), JavaScript, HTML/CSS</li>
+          <li><strong>Version Control &amp; DevOps:</strong> Git, GitHub (Branching, Repository Management, Commit Standards)</li>
+          <li><strong>Data Ingestion &amp; Integration:</strong> ETL/ELT Pipelines, REST APIs, Handling Imperfect Data, XML/JSON Parsing, Data Governance &amp; MDM principles</li>
+          <li><strong>Analytical &amp; Stakeholder Delivery:</strong> Technical Documentation, Requirements Gathering, Problem Troubleshooting, Agile Project Delivery</li>
           <li><strong>ERP / Business Systems:</strong> Intact IQ, Syrinx</li>
-          <li><strong>Data Integration:</strong> REST APIs, Data Integration, Data Synchronisation</li>
-          <li><strong>Integrations &amp; APIs:</strong> REST APIs, data synchronisation, third-party system integration</li>
-          <li><strong>Tools:</strong> Git/GitHub, Lansweeper, Active Directory</li>
           <li><strong>Industrial Systems:</strong> SCADA / DCS (Honeywell, ABB, WinCC)</li>
         </ul>
 
         <hr class="divider">
 
         <h2 class="section" id="education">Education</h2>
+
+        <div class="edu-block">
+          <div class="edu-title">Oleksandr Dovzhenko Hlukhiv National Pedagogical University</div>
+          <div class="edu-dates">2023</div>
+          <div class="edu-degree">Master's Degree in Management</div>
+        </div>
+
         <div class="edu-block">
           <div class="edu-title">National Technical University of Ukraine 'Kyiv Polytechnic Institute'</div>
           <div class="edu-dates">2012-2016</div>
           <div class="edu-degree">Bachelor's Degree in Computer Engineering</div>
         </div>
 
-        <h3 class="section">Courses</h3>
+        <div class="edu-block">
+          <div class="edu-title">Kremenchuk Mykhailo Ostrohradskyi National University</div>
+          <div class="edu-dates">2010</div>
+          <div class="edu-degree">Master's Degree in Computer Engineering</div>
+        </div>
+
+        <h3 class="section" id="certifications">Professional Certifications</h3>
         <ul>
-          <li>Power BI Desktop for Business Intelligence - Udemy</li>
+          <li>NCFE Level 2 Certificate in Principles of Team Leading (Ofqual Regulated, In Progress, Completion 2026)</li>
+          <li>NCFE Level 2 Certificate in Creating a Business Start-up (Ofqual Regulated) — 2025</li>
           <li>Python in Microsoft Power BI to Enhance Reporting Power - Udemy</li>
-          <li>Rolling Scopes School (JS, HTML,CSS) - EPAM</li>
+          <li>Power BI Desktop for Business Intelligence - Udemy</li>
           <li>Git &amp; GitHub - Version Control - Coursera (offered by Atlassian)</li>
+          <li>Full-Stack Web Development Foundations (JS, HTML, CSS) - Rolling Scopes School / EPAM</li>
         </ul>
 
         <hr class="divider">
 
         <h2 class="section" id="additional">Additional Information</h2>
         <ul>
-          <li>Eligible to work in the UK</li>
-          <li>Willingness to travel for stakeholder engagement and training</li>
-          <li>Volunteering: Vice Chair of Trustee – Lichfield District City of Sanctuary (LDCoS), Lichfield Litter Legends</li>
+          <li><strong>Work Authorisation:</strong> Eligible to work in the UK (Full right to work, no sponsorship required)</li>
+          <li><strong>Mobility:</strong> Full international Driver's Licence; willing to travel for stakeholder engagement, business workshops, and site visits</li>
+          <li><strong>Volunteering:</strong> Vice Chair of Trustees – Lichfield District City of Sanctuary (LDCoS); Active Volunteer – Lichfield Litter Legends</li>
         </ul>
 
       </div>
@@ -345,26 +359,25 @@
       <!-- ===== RIGHT COLUMN ===== -->
       <div class="right-col">
 
-        <h2 class="section" id="profile">Profile</h2>
+        <h2 class="section" id="profile">Profile Summary</h2>
         <div class="profile">
-          <p>Analytics/Data Engineer with hands-on experience designing data solutions using SQL, Power BI, and Python in complex business environments.</p>
-          <p>Strong expertise in data modelling, DAX, and SQL optimisation, building high-performance semantic models and reports.</p>
-          <p>Experienced across the full data lifecycle, including data modelling, reporting, performance tuning, and system integrations.</p>
-          <p>Proven ability to deliver reliable, business-ready data solutions and work effectively with both technical teams and stakeholders.</p>
+          <p>Results-driven Data and Reporting Engineer with a Master's in Computer Engineering and 10+ years of hands-on experience designing, building, and maintaining enterprise reporting solutions.</p>
+          <p>Expert in Advanced SQL (T-SQL, complex queries, stored procedures, views), Power BI (DAX, Power Query, Star Schema modelling), and Python automation.</p>
+          <p>Proven track record in merchant/operational data environments, integrating multi-system data (sales, purchasing, inventory, pricing), handling imperfect source records, and building version-controlled ETL/ELT workflows.</p>
+          <p>Skilled at translating complex business requirements into clear technical designs while supporting both BAU reporting and ongoing data transformation projects.</p>
         </div>
 
         <h3 class="section" id="achievements">Key Achievements</h3>
         <ul>
-          <li>Designed and optimised Power BI semantic models and advanced DAX measures, significantly improving report performance and usability</li>
-          <li>Delivered API integration between Syrinx and Hilti On!Track, achieving 100% asset movement visibility and improving data accuracy</li>
-          <li>Implemented EDI (Electronic Data Interchange) solution, automating ~75% of invoice processing, reducing manual effort and improving data quality and processing efficiency</li>
-          <li>Automated data workflows using Python, SQL, and Power Automate, reducing manual effort by ~30–40% and improving processing efficiency</li>
-          <li>Led implementation of automation upgrades for industrial control systems in a catalytic reforming unit, improving real-time data reliability, system performance, and operational monitoring in a high-risk production environment</li>
+          <li><strong>Reporting &amp; Dashboard Modernisation:</strong> Designed and delivered scalable Power BI reporting solutions and semantic data models, replacing manual spreadsheets with automated, self-service dashboards for operational and executive teams.</li>
+          <li><strong>Data Quality &amp; Automated Reconciliation:</strong> Created T-SQL and Python integrity scripts to validate incoming multi-source data (EDI, XML, JSON), handling imperfect source data and cutting processing errors significantly.</li>
+          <li><strong>System Integrations &amp; API Automation:</strong> Built automated API data exchange pipelines between core operational systems (Syrinx and Hilti On!Track), achieving 100% asset movement visibility.</li>
+          <li><strong>Process Efficiency &amp; Customisation:</strong> Leveraged Python, HTML/CSS, and automated workflows to streamline report delivery and data transformations, reducing manual reporting workload by 30–40%.</li>
         </ul>
 
         <hr class="divider">
 
-        <h2 class="section" id="experience">Work Experience</h2>
+        <h2 class="section" id="experience">Professional Experience</h2>
         <div class="skills-hint">Click a role to expand it — or click the timeline below</div>
 
         <div class="timeline" id="timeline">
@@ -384,16 +397,11 @@
           </div>
           <div class="job-body">
             <ul>
-              <li>Analyse complex operational and business datasets using SQL and Power BI to generate actionable insights supporting management and operational decision-making.</li>
-              <li>Design, optimise, and maintain Microsoft SQL Server databases, queries, and stored procedures to ensure efficient data storage, performance, and data integrity.</li>
-              <li>Designed and maintained enterprise-grade semantic data models in Power BI to deliver fast, scalable self-service analytics and actionable business insights.</li>
-              <li>Developed advanced DAX measures to support business reporting and performance optimisation</li>
-              <li>Support SDLC and project activities by assisting with requirements gathering, documenting business processes, supporting testing, and implementing system changes.</li>
-              <li>Contribute to business process optimisation initiatives by identifying inefficiencies and recommending data-driven improvements.</li>
-              <li>Develop automation and data-processing scripts using Python and C# to improve data workflows and reduce manual effort.</li>
-              <li>Led a business-critical integration project between hire system(Syrinx) and Hilti On!Track, designing and supporting API-based data exchange to improve asset visibility and data accuracy across systems.</li>
-              <li>Collaborate with cross-functional teams (operations, finance, third-party) and participate in meetings and workshops to facilitate effective communication between business and technical teams.</li>
-              <li>Perform root cause analysis on data and reporting issues, proposing long-term improvements to improve data accuracy and reliability.</li>
+              <li><strong>ERP Embedded Dashboards &amp; CRM Development:</strong> Designed and built a user-friendly CRM dashboard directly within the ERP interface using JavaScript, HTML, CSS, and T-SQL to log sales reps' customer interactions, track communication histories, and monitor sales activity KPIs.</li>
+              <li><strong>Reporting &amp; BI Delivery:</strong> Design, build, and maintain enterprise Power BI semantic models and interactive reports, monitoring daily sales orders, purchasing, inventory, pricing, and branch performance metrics.</li>
+              <li><strong>SQL Development &amp; Data Modelling:</strong> Write and optimise T-SQL queries, stored procedures, and views in SQL Server (SSMS) to drive clean underlying report datasets and business intelligence.</li>
+              <li><strong>Integration &amp; Imperfect Data Handling:</strong> Build automated ETL pipelines using Python, T-SQL, and REST APIs, reconciling disparate datasets and cleaning imperfect source records from ERP systems.</li>
+              <li><strong>Code Management &amp; Governance:</strong> Utilise Git/GitHub for version control of custom scripts and data workflows, establishing clear technical documentation, data definitions, and change logs for production reports.</li>
             </ul>
           </div>
         </div>
@@ -401,15 +409,15 @@
         <div class="job" data-job id="job-2">
           <div class="job-head">
             <div>
-              <div class="job-title">Online Teacher</div>
-              <div class="job-meta">Freelance / Kremenchuk, UA &nbsp;·&nbsp; 2022-2023</div>
+              <div class="job-title">Online IT Teacher</div>
+              <div class="job-meta">Freelance / Kremenchuk, Ukraine &nbsp;·&nbsp; 2022-2023</div>
             </div>
             <span class="job-toggle">＋</span>
           </div>
           <div class="job-body">
             <ul>
-              <li>Delivered IT training to children aged 9-13, covering programming, web development, and IT Basics.</li>
-              <li>Relocated from Ukraine to the UK to join the family in January 2023.</li>
+              <li>Delivered structured IT and programming training to students aged 9-13, covering core software development concepts, algorithms, web development (HTML/CSS), and IT basics.</li>
+              <li>Translated complex technical concepts into easy-to-understand, engaging learning materials and practical tasks. (Relocated to the UK in January 2023.)</li>
             </ul>
           </div>
         </div>
@@ -418,15 +426,15 @@
           <div class="job-head">
             <div>
               <div class="job-title">Automation &amp; Control Systems Engineer</div>
-              <div class="job-meta">JSC «Ukrtatnafta» / Kremenchuk, UA &nbsp;·&nbsp; 2010-2022</div>
+              <div class="job-meta">JSC "Ukrtatnafta" / Kremenchuk, Ukraine &nbsp;·&nbsp; 2010-2022</div>
             </div>
             <span class="job-toggle">＋</span>
           </div>
           <div class="job-body">
             <ul>
-              <li>Designed, implemented, and supported industrial automation and SCADA/DCS systems in a large-scale manufacturing environment.</li>
-              <li>Worked with real-time industrial data systems where accuracy, reliability, and system uptime were critical.</li>
-              <li>Developed and maintained PLC programs (FBD, LAD, STL) and associated technical documentation.</li>
+              <li><strong>Industrial Systems &amp; Data Integrity:</strong> Designed, configured, and maintained industrial automation, DCS, and SCADA systems in a large-scale manufacturing environment where real-time data accuracy and 99.9% uptime were critical.</li>
+              <li><strong>Engineering &amp; Documentation:</strong> Developed PLC programs (FBD, LAD, STL), engineered control loops, and authored extensive technical documentation and operational procedures.</li>
+              <li><strong>Project Leadership:</strong> Led the implementation of control system upgrades for a catalytic reforming unit, significantly enhancing real-time data monitoring and operational safety in a high-risk production facility.</li>
             </ul>
           </div>
         </div>
